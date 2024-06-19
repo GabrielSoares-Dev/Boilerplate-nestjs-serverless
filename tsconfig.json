@@ -16,7 +16,12 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@domain": ["./src/domain"],
+      "@application": ["./src/domain"],
+      "@infra": ["./src/infra"],
+    }
   },
   "watchOptions": {
     "watchFile": "priorityPollingInterval",
