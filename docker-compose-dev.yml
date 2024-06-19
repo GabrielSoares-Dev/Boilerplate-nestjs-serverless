@@ -14,6 +14,7 @@ services:
       - node-modules-boilerplate-nestjs-docker-volume:/app/node_modules
     networks:
       - boilerplate-nestjs-docker-network
+      - mysql-network
     stdin_open: true
     tty: true
 volumes:
@@ -22,4 +23,7 @@ volumes:
 networks:
   boilerplate-nestjs-docker-network:
     name: boilerplate-nestjs-docker-network
+    driver: bridge
+  mysql-network:
+    name: mysql-network
     driver: bridge
