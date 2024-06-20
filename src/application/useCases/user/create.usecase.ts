@@ -1,71 +1,48 @@
 import { Injectable, Inject } from '@nestjs/common';
+import { User } from '@domain';
 import {
+  CreateUserUseCaseInputDto,
   LoggerServiceInterface,
   LOGGER_SERVICE_TOKEN,
-} from '@application/services';
+  UserRepositoryInterface,
+  USER_REPOSITORY_TOKEN,
+  BusinessException,
+} from '@application';
 
 @Injectable()
 export class CreateUserUseCase {
   constructor(
     @Inject(LOGGER_SERVICE_TOKEN)
     private readonly loggerService: LoggerServiceInterface,
+
+    @Inject(USER_REPOSITORY_TOKEN)
+    private readonly userRepository: UserRepositoryInterface,
   ) {}
 
-  async run() {}
+  protected validate(input: CreateUserUseCaseInputDto) {
+    const entity = new User(input);
+
+    entity.create();
+  }
+
+  async alreadyExists(email: string) {
+    return this.userRepository.findByEmail(email);
+  }
+
+  async run(input: CreateUserUseCaseInputDto) {
+    this.loggerService.info('START CreateUserUseCase');
+    this.loggerService.debug('input', input);
+
+    this.validate(input);
+
+    const alreadyExists = await this.alreadyExists(input.email);
+    this.loggerService.debug('alreadyExists', alreadyExists);
+
+    if (alreadyExists) throw new BusinessException('User already exists');
+
+    const created = await this.userRepository.create(input);
+    this.loggerService.debug('created', created);
+
+    this.loggerService.info('FINISH CreateUserUseCase');
+  }
 }
-
-// class CreateUserUseCase
-// {
-//     protected LoggerServiceInterface $loggerService;
-
-//     protected UserRepositoryInterface $repository;
-
-//     public function __construct(
-//         LoggerServiceInterface $loggerService,
-//         UserRepositoryInterface $repository
-//     ) {
-//         $this->loggerService = $loggerService;
-//         $this->repository = $repository;
-//     }
-
-//     protected function valid(CreateUserUseCaseInputDto $input): void
-//     {
-//         $entity = new User(...(array) $input);
-
-//         $entity->create();
-//     }
-
-//     protected function foundUserBySameEmail(string $email): bool
-//     {
-//         return (bool) $this->repository->findByEmail($email);
-//     }
-
-//     protected function assignRole(string $email): void
-//     {
-//         $input = new AssignRoleRepositoryInputDto(Role::ADMIN, $email);
-
-//         $this->repository->assignRole($input);
-//     }
-
-//     public function run(CreateUserUseCaseInputDto $input): void
-//     {
-//         $this->loggerService->info('START CreateUserUseCase');
-
-//         $this->loggerService->debug('Input CreateUserUseCase', $input);
-
-//         $this->valid($input);
-
-//         $email = $input->email;
-
-//         if ($this->foundUserBySameEmail($email)) throw new BusinessException('User already exists');
-
-//         $data = new CreateUserRepositoryInputDto(...(array) $input);
-
-//         $this->repository->create($data);
-
-//         $this->assignRole($email);
-
-//         $this->loggerService->info('FINISH CreateUserUseCase');
-
-//     }
-// }

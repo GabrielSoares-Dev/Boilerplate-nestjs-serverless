@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
-import { CreateUserUseCase } from '@application/useCases';
-import { UserController } from '@infra/http';
+import { CreateUserUseCase, USER_REPOSITORY_TOKEN } from '@application';
+import { UserController, UserRepository } from '@infra';
 
 @Module({
-  imports: [],
   controllers: [UserController],
-  providers: [CreateUserUseCase],
+  providers: [
+    CreateUserUseCase,
+    {
+      provide: USER_REPOSITORY_TOKEN,
+      useClass: UserRepository,
+    },
+  ],
 })
 export class UserModule {}
