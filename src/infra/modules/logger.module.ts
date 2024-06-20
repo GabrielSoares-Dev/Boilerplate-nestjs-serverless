@@ -1,15 +1,10 @@
 import { Module, Global } from '@nestjs/common';
-import { LoggerService } from '@infra';
-import { LOGGER_SERVICE_TOKEN } from '@application';
+import { LoggerService } from '@infra/services';
+import { LOGGER_SERVICE_TOKEN } from '@application/services';
 
 @Global()
 @Module({
-  providers: [
-    {
-      useClass: LoggerService,
-      provide: LOGGER_SERVICE_TOKEN,
-    },
-  ],
-  exports: [LoggerService],
+  providers: [{ provide: LOGGER_SERVICE_TOKEN, useClass: LoggerService }],
+  exports: [LOGGER_SERVICE_TOKEN],
 })
 export class LoggerModule {}
