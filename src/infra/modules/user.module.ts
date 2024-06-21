@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
-import { CreateUserUseCase, USER_REPOSITORY_TOKEN } from '@application';
-import { UserController, UserRepository } from '@infra';
+import {
+  CreateUserUseCase,
+  USER_REPOSITORY_TOKEN,
+  CRYPTOGRAPHY_SERVICE_TOKEN,
+} from '@application';
+import { UserController, UserRepository, CryptographyService } from '@infra';
 
 @Module({
   controllers: [UserController],
@@ -9,6 +13,10 @@ import { UserController, UserRepository } from '@infra';
     {
       provide: USER_REPOSITORY_TOKEN,
       useClass: UserRepository,
+    },
+    {
+      provide: CRYPTOGRAPHY_SERVICE_TOKEN,
+      useClass: CryptographyService,
     },
   ],
 })
