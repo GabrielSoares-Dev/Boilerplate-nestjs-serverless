@@ -7,7 +7,7 @@ import {
   HttpException,
   Body,
 } from '@nestjs/common';
-import { CreateUserSerializerInputDto } from '@infra';
+import { CreateUserSerializerInputDto } from '@infra/http/serializers';
 import {
   LoggerServiceInterface,
   LOGGER_SERVICE_TOKEN,
@@ -50,7 +50,7 @@ export class UserController {
       if (isAlreadyExistsError) httpCode = HttpStatus.BAD_REQUEST;
 
       this.loggerService.error('error', errorMessage);
-      throw new HttpException(error.message, httpCode);
+      throw new HttpException(errorMessage, httpCode);
     }
   }
 }

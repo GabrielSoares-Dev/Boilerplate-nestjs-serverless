@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { UserModule } from '../../../src/infra/modules/user.module';
+import { AppModule } from '@infra/modules/app.module';
 import * as request from 'supertest';
 
 describe('Create User', () => {
@@ -8,7 +8,7 @@ describe('Create User', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [UserModule],
+      imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -17,7 +17,7 @@ describe('Create User', () => {
 
   it('Should be create user with success', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .post('/user')
       .expect(200)
       .expect('Hello World!');
   });

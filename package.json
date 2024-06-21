@@ -76,6 +76,9 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
+    "setupFiles": [
+      "<rootDir>/../jest.setup.js"
+    ],
     "moduleNameMapper": {
       "@application": "<rootDir>/../src/application",
       "@domain": "<rootDir>/../src/domain",

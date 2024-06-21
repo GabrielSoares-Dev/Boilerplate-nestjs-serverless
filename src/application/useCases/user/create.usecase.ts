@@ -30,11 +30,11 @@ export class CreateUserUseCase {
     entity.create();
   }
 
-  async alreadyExists(email: string) {
+  protected async alreadyExists(email: string) {
     return this.userRepository.findByEmail(email);
   }
 
-  async encryptPassword(password: string) {
+  protected async encryptPassword(password: string) {
     return this.cryptographyService.encrypt(password);
   }
 
