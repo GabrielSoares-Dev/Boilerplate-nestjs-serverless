@@ -8,17 +8,20 @@ import {
   Body,
 } from '@nestjs/common';
 import { CreateUserSerializerInputDto } from '@infra/http/serializers/user/create.serializer';
-import { LOGGER_SERVICE_TOKEN, LoggerServiceInterface } from '@application/services/logger.service';
+import {
+  LOGGER_SERVICE_TOKEN,
+  LoggerServiceInterface,
+} from '@application/services/logger.service';
 import { CreateUserUseCase } from '@application/useCases/user/create.usecase';
 import { Response } from 'express';
 
-@Controller('user')
+@Controller({ path: 'user', version: '1' })
 export class UserController {
   constructor(
     @Inject(LOGGER_SERVICE_TOKEN)
     private readonly loggerService: LoggerServiceInterface,
     private createUserUseCase: CreateUserUseCase,
-  ) { }
+  ) {}
 
   private context = 'UserController';
 

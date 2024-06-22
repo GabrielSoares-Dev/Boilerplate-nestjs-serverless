@@ -1,4 +1,7 @@
-import { CreateRepositoryInputDto, CreateRepositoryOutputDto } from '@application/dtos/repositories/user/create.dto';
+import {
+  CreateRepositoryInputDto,
+  CreateRepositoryOutputDto,
+} from '@application/dtos/repositories/user/create.dto';
 import { FindByEmailRepositoryOutputDto } from '@application/dtos/repositories/user/findByEmail.dto';
 
 export const USER_REPOSITORY_TOKEN = 'USER_REPOSITORY_TOKEN';

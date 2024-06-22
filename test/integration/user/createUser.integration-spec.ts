@@ -1,30 +1,105 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { UserModule } from '@infra/modules/user.module';
-import { LoggerModule } from '@infra/modules/logger.module';
-import { PrismaModule } from '@infra/modules/prisma.module';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { AppModule } from '@infra/modules/app.module';
+import { HttpStatus } from '@nestjs/common';
+import { deleteUsers, createUser } from '@test/helpers/db/factory/user.factory';
 import * as request from 'supertest';
+
+const path = '/v1/user';
+
+const input = {
+  name: 'test',
+  email: 'test@gmail.com',
+  password: 'Test@2312',
+  phoneNumber: '11991742156',
+};
 
 describe('Create User', () => {
   let app: INestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [UserModule, LoggerModule, PrismaModule, ConfigModule.forRoot({
-        isGlobal: true,
-        envFilePath: '.env.test',
-      }),],
+      imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+      }),
+    );
+    app.enableVersioning();
     await app.init();
   });
 
+  beforeEach(async () => {
+    await deleteUsers();
+  });
+
   it('Should be create user with success', () => {
+    const expectedStatusCode = HttpStatus.CREATED;
+    const expectedResponse = {
+      statusCode: expectedStatusCode,
+      message: 'User created successfully',
+    };
     return request(app.getHttpServer())
-      .post('/user')
-      .expect(200)
-      .expect('Hello World!');
+      .post(path)
+      .send(input)
+      .expect(expectedStatusCode)
+      .expect(expectedResponse);
+  });
+
+  it('Should be failure when user already exists', async () => {
+    const user = {
+      name: 'test',
+      email: 'test@gmail.com',
+      password: 'Test@2312',
+      phoneNumber: '11991742156',
+    };
+
+    await createUser(user);
+
+    const expectedStatusCode = HttpStatus.BAD_REQUEST;
+    const expectedResponse = {
+      statusCode: expectedStatusCode,
+      message: 'User already exists',
+    };
+    return request(app.getHttpServer())
+      .post(path)
+      .send(input)
+      .expect(expectedStatusCode)
+      .expect(expectedResponse);
+  });
+
+  it('Should be failure without fields', () => {
+    const expectedStatusCode = HttpStatus.UNPROCESSABLE_ENTITY;
+    const expectedResponse = {
+      message: [
+        'name must be a string',
+        'name should not be empty',
+        'email must be an email',
+        'email must be a string',
+        'email should not be empty',
+        'phoneNumber must be shorter than or equal to 11 characters',
+        'phoneNumber must be longer than or equal to 11 characters',
+        'phoneNumber must be a string',
+        'phoneNumber should not be empty',
+        'password must match /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$/ regular expression',
+        'password must be longer than or equal to 8 characters',
+        'password must be a string',
+        'password should not be empty',
+      ],
+      error: 'Unprocessable Entity',
+      statusCode: expectedStatusCode,
+    };
+
+    return request(app.getHttpServer())
+      .post(path)
+      .expect(expectedStatusCode)
+      .expect(expectedResponse);
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });

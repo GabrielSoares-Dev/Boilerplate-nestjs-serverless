@@ -1,9 +1,18 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { User } from '@domain/entities/user.entity';
 import { CreateUserUseCaseInputDto } from '@application/dtos/useCases/user/create.dto';
-import { LOGGER_SERVICE_TOKEN, LoggerServiceInterface } from '@application/services/logger.service';
-import { CRYPTOGRAPHY_SERVICE_TOKEN, CryptographyServiceInterface } from '@application/services/cryptography.service';
-import { USER_REPOSITORY_TOKEN, UserRepositoryInterface } from '@application/repositories/user.repository';
+import {
+  LOGGER_SERVICE_TOKEN,
+  LoggerServiceInterface,
+} from '@application/services/logger.service';
+import {
+  CRYPTOGRAPHY_SERVICE_TOKEN,
+  CryptographyServiceInterface,
+} from '@application/services/cryptography.service';
+import {
+  USER_REPOSITORY_TOKEN,
+  UserRepositoryInterface,
+} from '@application/repositories/user.repository';
 import { BusinessException } from '@application/exceptions/business.exception';
 
 @Injectable()
@@ -17,7 +26,7 @@ export class CreateUserUseCase {
 
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly userRepository: UserRepositoryInterface,
-  ) { }
+  ) {}
 
   protected validate(input: CreateUserUseCaseInputDto) {
     const entity = new User(input);

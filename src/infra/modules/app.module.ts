@@ -16,4 +16,4 @@ const isTest = process.env.NODE_ENV === 'test';
     PrismaModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
