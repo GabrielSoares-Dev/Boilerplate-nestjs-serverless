@@ -1,12 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  CreateUserUseCase,
-  CryptographyServiceInterface,
-  CRYPTOGRAPHY_SERVICE_TOKEN,
-  UserRepositoryInterface,
-  USER_REPOSITORY_TOKEN,
-} from '@application';
-import { loggerMock } from '@test/helpers';
+import { CreateUserUseCase } from '@application/useCases/user/create.usecase';
+import { CRYPTOGRAPHY_SERVICE_TOKEN, CryptographyServiceInterface } from '@application/services/cryptography.service';
+import { USER_REPOSITORY_TOKEN, UserRepositoryInterface } from '@application/repositories/user.repository';
+import { loggerMock } from '@test/helpers/mocks/logger.mock';
 
 const input = {
   name: 'test',

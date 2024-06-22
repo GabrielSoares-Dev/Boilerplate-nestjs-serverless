@@ -1,5 +1,5 @@
-import { UserEntityInputDto } from '@application/dtos';
-import { BusinessException } from '@application/exceptions';
+import { UserEntityInputDto } from '@application/dtos/entities/user.dto';
+import { BusinessException } from '@application/exceptions/business.exception';
 
 export class User {
   constructor(private readonly input: UserEntityInputDto) {}

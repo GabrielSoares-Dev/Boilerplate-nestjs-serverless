@@ -1,4 +1,4 @@
-import { LOGGER_SERVICE_TOKEN } from '@application';
+import { LOGGER_SERVICE_TOKEN } from '@application/services/logger.service';
 
 export const loggerMock = {
   provide: LOGGER_SERVICE_TOKEN,

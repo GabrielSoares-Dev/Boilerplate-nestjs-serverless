@@ -8,9 +8,6 @@
   "testEnvironment": "node",
   "testRegex": ".integration-spec.ts$",
   "moduleNameMapper": {
-    "@application": "<rootDir>/../../src/application",
-    "@domain": "<rootDir>/../../src/domain",
-    "@infra": "<rootDir>/../../src/infra",
     "@application/(.*)$": "<rootDir>/../../src/application/$1",
     "@domain/(.*)$": "<rootDir>/../../src/domain/$1",
     "@infra/(.*)$": "<rootDir>/../../src/infra/$1",

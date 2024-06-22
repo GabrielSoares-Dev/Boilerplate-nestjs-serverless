@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from '@infra/modules/app.module';
+import { ConfigModule } from '@nestjs/config';
+import { UserModule } from '@infra/modules/user.module';
+import { LoggerModule } from '@infra/modules/logger.module';
+import { PrismaModule } from '@infra/modules/prisma.module';
 import * as request from 'supertest';
 
 describe('Create User', () => {
@@ -8,7 +11,10 @@ describe('Create User', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [UserModule, LoggerModule, PrismaModule, ConfigModule.forRoot({
+        isGlobal: true,
+        envFilePath: '.env.test',
+      }),],
     }).compile();
 
     app = moduleFixture.createNestApplication();

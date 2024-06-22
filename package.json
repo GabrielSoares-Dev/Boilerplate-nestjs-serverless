@@ -20,7 +20,9 @@
     "test:integration": "jest --config ./test/integration/jest-integration.json",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "migrate:local": "prisma migrate dev",
+    "migrate": "prisma migrate deploy"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -79,10 +81,8 @@
     "setupFiles": [
       "<rootDir>/../jest.setup.js"
     ],
+    
     "moduleNameMapper": {
-      "@application": "<rootDir>/../src/application",
-      "@domain": "<rootDir>/../src/domain",
-      "@infra": "<rootDir>/../src/infra",
       "@application/(.*)$": "<rootDir>/../src/application/$1",
       "@domain/(.*)$": "<rootDir>/../src/domain/$1",
       "@infra/(.*)$": "<rootDir>/../src/infra/$1",

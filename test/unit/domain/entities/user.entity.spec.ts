@@ -1,4 +1,4 @@
-import { User } from '@domain';
+import { User } from '@domain/entities/user.entity';
 
 describe('User', () => {
   describe('create', () => {

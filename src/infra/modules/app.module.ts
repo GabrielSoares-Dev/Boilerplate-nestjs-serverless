@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from '@infra/modules/logger.module';
 import { UserModule } from '@infra/modules/user.module';
@@ -11,7 +11,7 @@ const isTest = process.env.NODE_ENV === 'test';
       isGlobal: true,
       envFilePath: isTest ? '.env.test' : '.env',
     }),
-    forwardRef(() => UserModule),
+    UserModule,
     LoggerModule,
     PrismaModule,
   ],

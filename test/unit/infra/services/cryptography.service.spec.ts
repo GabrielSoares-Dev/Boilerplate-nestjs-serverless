@@ -1,5 +1,5 @@
-import { CryptographyServiceInterface } from '@application';
-import { CryptographyService } from '@infra';
+import { CryptographyServiceInterface } from '@application/services/cryptography.service';
+import { CryptographyService } from '@infra/services/cryptography.service';
 import * as bcrypt from 'bcrypt';
 
 describe('CryptographyService', () => {

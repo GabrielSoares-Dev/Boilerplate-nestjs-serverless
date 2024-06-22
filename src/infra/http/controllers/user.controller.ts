@@ -7,12 +7,9 @@ import {
   HttpException,
   Body,
 } from '@nestjs/common';
-import { CreateUserSerializerInputDto } from '@infra/http/serializers';
-import {
-  LoggerServiceInterface,
-  LOGGER_SERVICE_TOKEN,
-  CreateUserUseCase,
-} from '@application';
+import { CreateUserSerializerInputDto } from '@infra/http/serializers/user/create.serializer';
+import { LOGGER_SERVICE_TOKEN, LoggerServiceInterface } from '@application/services/logger.service';
+import { CreateUserUseCase } from '@application/useCases/user/create.usecase';
 import { Response } from 'express';
 
 @Controller('user')
@@ -21,7 +18,7 @@ export class UserController {
     @Inject(LOGGER_SERVICE_TOKEN)
     private readonly loggerService: LoggerServiceInterface,
     private createUserUseCase: CreateUserUseCase,
-  ) {}
+  ) { }
 
   private context = 'UserController';
 
