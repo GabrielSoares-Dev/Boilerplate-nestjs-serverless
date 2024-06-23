@@ -20,3 +20,13 @@ model User {
   @@map("users")
 }
 
+model Permission {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?   
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@map("permissions")
+}

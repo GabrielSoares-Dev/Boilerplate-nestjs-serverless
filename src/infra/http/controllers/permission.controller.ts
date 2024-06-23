@@ -7,27 +7,27 @@ import {
   HttpException,
   Body,
 } from '@nestjs/common';
-import { CreateUserSerializerInputDto } from '@infra/http/serializers/user/create.serializer';
+import { CreatePermissionSerializerInputDto } from '@infra/http/serializers/permission/create.serializer';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
 } from '@application/services/logger.service';
-import { CreateUserUseCase } from '@application/useCases/user/create.usecase';
+import { CreatePermissionUseCase } from '@application/useCases/permission/create.usecase';
 import { Response } from 'express';
 
-@Controller({ path: 'user', version: '1' })
-export class UserController {
+@Controller({ path: 'permission', version: '1' })
+export class PermissionController {
   constructor(
     @Inject(LOGGER_SERVICE_TOKEN)
     private readonly loggerService: LoggerServiceInterface,
-    private createUseCase: CreateUserUseCase,
+    private createUseCase: CreatePermissionUseCase,
   ) {}
 
-  private context = 'UserController';
+  private context = 'PermissionController';
 
   @Post()
   async create(
-    @Body() input: CreateUserSerializerInputDto,
+    @Body() input: CreatePermissionSerializerInputDto,
     @Res() res: Response,
   ) {
     this.loggerService.info(`START ${this.context} create`);
@@ -39,14 +39,14 @@ export class UserController {
 
       const response = {
         statusCode: HttpStatus.CREATED,
-        message: 'User created successfully',
+        message: 'Permission created successfully',
       };
       return res.json(response);
     } catch (error) {
       const errorMessage = error.message;
       let httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
 
-      const isAlreadyExistsError = errorMessage === 'User already exists';
+      const isAlreadyExistsError = errorMessage === 'Permission already exists';
       if (isAlreadyExistsError) httpCode = HttpStatus.BAD_REQUEST;
 
       this.loggerService.error('error', errorMessage);
