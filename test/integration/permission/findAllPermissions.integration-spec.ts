@@ -31,8 +31,9 @@ describe('Find all permissions', () => {
   });
 
   it('Should be found permissions with success', async () => {
+    const id = 30;
     const permission = {
-      id: 1,
+      id,
       name: 'test',
       description: 'test',
       createdAt,
@@ -46,7 +47,7 @@ describe('Find all permissions', () => {
       message: 'Found permissions',
       content: [
         {
-          id: 1,
+          id,
           name: 'test',
           description: 'test',
           createdAt: createdAt.toISOString(),

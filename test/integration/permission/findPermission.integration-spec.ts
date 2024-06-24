@@ -10,12 +10,10 @@ import * as request from 'supertest';
 
 const path = '/v1/permission';
 
-const input = {
-  name: 'test',
-  description: 'test',
-};
+const createdAt = new Date();
+const updatedAt = new Date();
 
-describe('Create Permission', () => {
+describe('Find permission', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -37,50 +35,61 @@ describe('Create Permission', () => {
     await deletePermissions();
   });
 
-  it('Should be create permission with success', () => {
-    const expectedStatusCode = HttpStatus.CREATED;
+  it('Should be found permission with success', async () => {
+    const id = 99;
+    const permission = {
+      id,
+      name: 'test',
+      description: 'test',
+      createdAt,
+      updatedAt,
+    };
+    await createPermission(permission);
+
+    const expectedStatusCode = HttpStatus.OK;
     const expectedResponse = {
       statusCode: expectedStatusCode,
-      message: 'Permission created successfully',
+      message: 'Permission found',
+      content: {
+        id,
+        name: 'test',
+        description: 'test',
+        createdAt: createdAt.toISOString(),
+        updatedAt: updatedAt.toISOString(),
+      },
     };
+
     return request(app.getHttpServer())
-      .post(path)
-      .send(input)
+      .get(`${path}/${id}`)
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });
 
-  it('Should be failure when permission already exists', async () => {
-    const permission = {
-      id: 20,
-      name: 'test',
-      description: 'test',
-    };
-
-    await createPermission(permission);
-
+  it('Should be is invalid id', async () => {
+    const id = 300;
     const expectedStatusCode = HttpStatus.BAD_REQUEST;
     const expectedResponse = {
       statusCode: expectedStatusCode,
-      message: 'Permission already exists',
+      message: 'Invalid id',
     };
+
     return request(app.getHttpServer())
-      .post(path)
-      .send(input)
+      .get(`${path}/${id}`)
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });
 
-  it('Should be failure without fields', () => {
+  it('Should be failure with wrong field', async () => {
     const expectedStatusCode = HttpStatus.UNPROCESSABLE_ENTITY;
     const expectedResponse = {
-      message: ['name must be a string', 'name should not be empty'],
+      message: ['id must be a number string'],
       error: 'Unprocessable Entity',
       statusCode: expectedStatusCode,
     };
 
+    const id = 'test';
     return request(app.getHttpServer())
-      .post(path)
+      .get(`${path}/${id}`)
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });
