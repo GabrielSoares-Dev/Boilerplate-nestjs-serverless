@@ -5,12 +5,10 @@ import { UserModule } from '@infra/modules/user.module';
 import { PermissionModule } from './permission.module';
 import { PrismaModule } from '@infra/modules/prisma.module';
 
-const isTest = process.env.NODE_ENV === 'test';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: isTest ? '.env.test' : '.env',
     }),
     LoggerModule,
     PrismaModule,
