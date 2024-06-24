@@ -3,6 +3,7 @@ import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
 } from '@application/services/logger.service';
+import { FindRepositoryOutputDto } from '@application/dtos/repositories/permission/find.dto';
 import { UpdatePermissionUseCaseInputDto } from '@application/dtos/useCases/permission/update.dto';
 import {
   PERMISSION_REPOSITORY_TOKEN,
@@ -20,11 +21,13 @@ export class UpdatePermissionUseCase {
     private readonly permissionRepository: PermissionRepositoryInterface,
   ) {}
 
-  protected async foundPermission(id: number) {
+  protected async foundPermission(
+    id: number,
+  ): Promise<FindRepositoryOutputDto> {
     return this.permissionRepository.find(id);
   }
 
-  async run(input: UpdatePermissionUseCaseInputDto) {
+  async run(input: UpdatePermissionUseCaseInputDto): Promise<void> {
     this.loggerService.info('START UpdatePermissionUseCase');
     this.loggerService.debug('input', input);
 

@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { User } from '@domain/entities/user.entity';
 import { CreateUserUseCaseInputDto } from '@application/dtos/useCases/user/create.dto';
+import { FindByEmailRepositoryOutputDto } from '@application/dtos/repositories/user/findByEmail.dto';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -28,21 +29,23 @@ export class CreateUserUseCase {
     private readonly userRepository: UserRepositoryInterface,
   ) {}
 
-  protected validate(input: CreateUserUseCaseInputDto) {
+  protected validate(input: CreateUserUseCaseInputDto): void {
     const entity = new User(input);
 
     entity.create();
   }
 
-  protected async alreadyExists(email: string) {
+  protected async alreadyExists(
+    email: string,
+  ): Promise<FindByEmailRepositoryOutputDto> {
     return this.userRepository.findByEmail(email);
   }
 
-  protected async encryptPassword(password: string) {
+  protected async encryptPassword(password: string): Promise<string> {
     return this.cryptographyService.encrypt(password);
   }
 
-  async run(input: CreateUserUseCaseInputDto) {
+  async run(input: CreateUserUseCaseInputDto): Promise<void> {
     this.loggerService.info('START CreateUserUseCase');
     this.loggerService.debug('input', input);
 

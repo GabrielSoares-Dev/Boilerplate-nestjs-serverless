@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
+import { FindAllUseCaseOutputDto } from '@application/dtos/useCases/permission/findAll.dto';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -18,7 +19,7 @@ export class FindAllPermissionsUseCase {
     private readonly permissionRepository: PermissionRepositoryInterface,
   ) {}
 
-  async run() {
+  async run(): Promise<FindAllUseCaseOutputDto> {
     this.loggerService.info('START FindAllPermissionsUseCase');
 
     const output = await this.permissionRepository.findAll();

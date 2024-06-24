@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CryptographyService implements CryptographyServiceInterface {
-  private async generateRandomSalt() {
+  private async generateRandomSalt(): Promise<string> {
     return bcrypt.genSalt();
   }
 
