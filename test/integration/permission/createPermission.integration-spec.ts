@@ -52,6 +52,7 @@ describe('Create Permission', () => {
 
   it('Should be failure when permission already exists', async () => {
     const permission = {
+      id: 1,
       name: 'test',
       description: 'test',
     };

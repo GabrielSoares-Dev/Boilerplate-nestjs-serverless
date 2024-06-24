@@ -6,6 +6,7 @@ import {
   CreateRepositoryOutputDto,
 } from '@application/dtos/repositories/permission/create.dto';
 import { FindByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
+import { FindAllRepositoryOutputDto } from '@application/dtos/repositories/permission/findAll.dto';
 
 @Injectable()
 export class PermissionRepository implements PermissionRepositoryInterface {
@@ -29,6 +30,7 @@ export class PermissionRepository implements PermissionRepositoryInterface {
       select: this.defaultFieldsToReturn,
     });
   }
+
   async findByName(name: string): Promise<FindByNameRepositoryOutputDto> {
     return this.model.findFirst({
       where: {
@@ -36,5 +38,9 @@ export class PermissionRepository implements PermissionRepositoryInterface {
       },
       select: this.defaultFieldsToReturn,
     });
+  }
+
+  async findAll(): Promise<FindAllRepositoryOutputDto> {
+    return this.model.findMany({ select: this.defaultFieldsToReturn });
   }
 }
