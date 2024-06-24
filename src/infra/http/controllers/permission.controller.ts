@@ -17,7 +17,7 @@ import {
 } from '@application/services/logger.service';
 import { CreatePermissionUseCase } from '@application/useCases/permission/create.usecase';
 import { FindAllPermissionsUseCase } from '@application/useCases/permission/findAll.usecase';
-import { FindPermissionsUseCase } from '@application/useCases/permission/find.usecase';
+import { FindPermissionUseCase } from '@application/useCases/permission/find.usecase';
 import { Response } from 'express';
 
 @Controller({ path: 'permission', version: '1' })
@@ -27,7 +27,7 @@ export class PermissionController {
     private readonly loggerService: LoggerServiceInterface,
     private createUseCase: CreatePermissionUseCase,
     private findAllUseCase: FindAllPermissionsUseCase,
-    private findUseCase: FindPermissionsUseCase,
+    private findUseCase: FindPermissionUseCase,
   ) {}
 
   private context = 'PermissionController';

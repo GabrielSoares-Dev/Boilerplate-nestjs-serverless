@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FindPermissionUseCase } from '@application/useCases/permission/find.usecase';
+import { UpdatePermissionUseCase } from '@application/useCases/permission/update.usecase';
 import {
   PERMISSION_REPOSITORY_TOKEN,
   PermissionRepositoryInterface,
@@ -8,6 +8,8 @@ import { loggerMock } from '@test/helpers/mocks/logger.mock';
 
 const input = {
   id: 1,
+  name: 'test',
+  description: 'test',
 };
 const createdAt = new Date();
 const updatedAt = new Date();
@@ -19,47 +21,50 @@ const mockFindOutput = {
   updatedAt,
 };
 
-describe('FindPermissionUseCase', () => {
-  let useCase: FindPermissionUseCase;
+describe('UpdatePermissionUseCase', () => {
+  let useCase: UpdatePermissionUseCase;
   let permissionRepository: PermissionRepositoryInterface;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        FindPermissionUseCase,
+        UpdatePermissionUseCase,
         {
           provide: PERMISSION_REPOSITORY_TOKEN,
           useValue: {
             find: jest.fn().mockResolvedValue(mockFindOutput),
+            update: jest.fn(),
           },
         },
         { ...loggerMock },
       ],
     }).compile();
 
-    useCase = module.get<FindPermissionUseCase>(FindPermissionUseCase);
+    useCase = module.get<UpdatePermissionUseCase>(UpdatePermissionUseCase);
     permissionRepository = module.get<PermissionRepositoryInterface>(
       PERMISSION_REPOSITORY_TOKEN,
     );
   });
 
-  it('Should be find permission', async () => {
-    const output = await useCase.run(input);
+  it('Should be update permission', async () => {
+    const updateSpyOn = jest.spyOn(permissionRepository, 'update');
+    await useCase.run(input);
 
-    const expectedOutput = {
+    const expectedInputUpdate = {
       id: 1,
       name: 'test',
       description: 'test',
-      createdAt,
-      updatedAt,
     };
 
-    expect(output).toEqual(expectedOutput);
+    expect(updateSpyOn).toHaveBeenCalledWith(expectedInputUpdate);
   });
 
   it('Should be is invalid id', async () => {
+    const updateSpyOn = jest.spyOn(permissionRepository, 'update');
     jest.spyOn(permissionRepository, 'find').mockResolvedValue(null);
 
     await expect(useCase.run(input)).rejects.toThrow('Invalid id');
+
+    expect(updateSpyOn).not.toHaveBeenCalled();
   });
 });

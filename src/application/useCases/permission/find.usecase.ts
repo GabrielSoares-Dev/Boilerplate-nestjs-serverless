@@ -11,7 +11,7 @@ import {
 import { BusinessException } from '@application/exceptions/business.exception';
 
 @Injectable()
-export class FindPermissionsUseCase {
+export class FindPermissionUseCase {
   constructor(
     @Inject(LOGGER_SERVICE_TOKEN)
     private readonly loggerService: LoggerServiceInterface,
@@ -21,14 +21,14 @@ export class FindPermissionsUseCase {
   ) {}
 
   async run(input: FindPermissionUseCaseInputDto) {
-    this.loggerService.info('START FindPermissionsUseCase');
+    this.loggerService.info('START FindPermissionUseCase');
 
     const output = await this.permissionRepository.find(input.id);
     this.loggerService.debug('output', output);
 
     if (!output) throw new BusinessException('Invalid id');
 
-    this.loggerService.info('FINISH FindPermissionsUseCase');
+    this.loggerService.info('FINISH FindPermissionUseCase');
     return output;
   }
 }

@@ -5,6 +5,10 @@ import {
   CreateRepositoryInputDto,
   CreateRepositoryOutputDto,
 } from '@application/dtos/repositories/permission/create.dto';
+import {
+  UpdateRepositoryInputDto,
+  UpdateRepositoryOutputDto,
+} from '@application/dtos/repositories/permission/update.dto';
 import { FindByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
 import { FindAllRepositoryOutputDto } from '@application/dtos/repositories/permission/findAll.dto';
 import { FindRepositoryOutputDto } from '@application/dtos/repositories/permission/find.dto';
@@ -28,6 +32,21 @@ export class PermissionRepository implements PermissionRepositoryInterface {
   ): Promise<CreateRepositoryOutputDto> {
     return this.model.create({
       data: input,
+      select: this.defaultFieldsToReturn,
+    });
+  }
+
+  async update(
+    input: UpdateRepositoryInputDto,
+  ): Promise<UpdateRepositoryOutputDto> {
+    return this.model.update({
+      where: {
+        id: input.id,
+      },
+      data: {
+        name: input.name,
+        description: input.description,
+      },
       select: this.defaultFieldsToReturn,
     });
   }
