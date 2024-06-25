@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Get,
+  Patch,
   Inject,
   Res,
   HttpStatus,
@@ -10,7 +11,11 @@ import {
   Param,
 } from '@nestjs/common';
 import { CreateRoleSerializerInputDto } from '@infra/http/serializers/role/create.serializer';
-import { FindRoleSerializerInputDto } from '../serializers/role/find.serializer';
+import { FindRoleSerializerInputDto } from '@infra/http/serializers/role/find.serializer';
+import {
+  UpdateRoleSerializerInputDto,
+  UpdateRoleSerializerInputParamDto,
+} from '@infra/http/serializers/role/update.serializer';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -18,6 +23,7 @@ import {
 import { CreateRoleUseCase } from '@application/useCases/role/create.usecase';
 import { FindAllRolesUseCase } from '@application/useCases/role/findAll.usecase';
 import { FindRoleUseCase } from '@application/useCases/role/find.usecase';
+import { UpdateRoleUseCase } from '@application/useCases/role/update.usecase';
 import { Response } from 'express';
 
 @Controller({ path: 'role', version: '1' })
@@ -28,6 +34,7 @@ export class RoleController {
     private createUseCase: CreateRoleUseCase,
     private findAllUseCase: FindAllRolesUseCase,
     private findUseCase: FindRoleUseCase,
+    private updateUseCase: UpdateRoleUseCase,
   ) {}
 
   private context = 'RoleController';
@@ -116,40 +123,40 @@ export class RoleController {
     }
   }
 
-  //   @Patch(':id')
-  //   async update(
-  //     @Param() params: UpdatePermissionSerializerInputParamDto,
-  //     @Body() input: UpdatePermissionSerializerInputDto,
-  //     @Res() res: Response,
-  //   ) {
-  //     this.loggerService.info(`START ${this.context} update`);
-  //     this.loggerService.debug('id', params.id);
-  //     this.loggerService.debug('input', input);
+  @Patch(':id')
+  async update(
+    @Param() params: UpdateRoleSerializerInputParamDto,
+    @Body() input: UpdateRoleSerializerInputDto,
+    @Res() res: Response,
+  ) {
+    this.loggerService.info(`START ${this.context} update`);
+    this.loggerService.debug('id', params.id);
+    this.loggerService.debug('input', input);
 
-  //     try {
-  //       await this.updateUseCase.run({
-  //         id: Number(params.id),
-  //         ...input,
-  //       });
+    try {
+      await this.updateUseCase.run({
+        id: Number(params.id),
+        ...input,
+      });
 
-  //       this.loggerService.info(`FINISH ${this.context} update`);
+      this.loggerService.info(`FINISH ${this.context} update`);
 
-  //       const response = {
-  //         statusCode: HttpStatus.OK,
-  //         message: 'Permission Updated successfully',
-  //       };
-  //       return res.json(response);
-  //     } catch (error) {
-  //       const errorMessage = error.message;
-  //       let httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Role Updated successfully',
+      };
+      return res.json(response);
+    } catch (error) {
+      const errorMessage = error.message;
+      let httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
 
-  //       const invalidIdError = errorMessage === 'Invalid id';
-  //       if (invalidIdError) httpCode = HttpStatus.BAD_REQUEST;
+      const invalidIdError = errorMessage === 'Invalid id';
+      if (invalidIdError) httpCode = HttpStatus.BAD_REQUEST;
 
-  //       this.loggerService.error('error', errorMessage);
-  //       throw new HttpException(errorMessage, httpCode);
-  //     }
-  //   }
+      this.loggerService.error('error', errorMessage);
+      throw new HttpException(errorMessage, httpCode);
+    }
+  }
 
   //   @Delete(':id')
   //   async remove(

@@ -17,7 +17,7 @@ import {
   UpdatePermissionSerializerInputDto,
   UpdatePermissionSerializerInputParamDto,
 } from '@infra/http/serializers/permission/update.serializer';
-import { DeletePermissionSerializerInputDto } from '../serializers/permission/delete.serializer';
+import { DeletePermissionSerializerInputDto } from '@infra/http/serializers/permission/delete.serializer';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
