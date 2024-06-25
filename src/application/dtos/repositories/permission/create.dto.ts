@@ -1,9 +1,9 @@
-export interface CreateRepositoryInputDto {
+export interface CreatePermissionRepositoryInputDto {
   name: string;
   description?: string;
 }
 
-export interface CreateRepositoryOutputDto {
+export interface CreatePermissionRepositoryOutputDto {
   id: number;
   name: string;
   description?: string;

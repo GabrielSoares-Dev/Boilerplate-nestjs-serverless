@@ -2,12 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@infra/services/prisma.service';
 import { RoleRepositoryInterface } from '@application/repositories/role.repository';
 import {
-  CreateRepositoryInputDto,
-  CreateRepositoryOutputDto,
+  CreateRoleRepositoryInputDto,
+  CreateRoleRepositoryOutputDto,
 } from '@application/dtos/repositories/role/create.dto';
-import { FindByNameRepositoryOutputDto } from '@application/dtos/repositories/role/findByName.dto';
-import { FindAllRepositoryOutputDto } from '@application/dtos/repositories/role/findAll.dto';
-import { FindRepositoryOutputDto } from '@application/dtos/repositories/role/find.dto';
+import {
+  UpdateRoleRepositoryInputDto,
+  UpdateRoleRepositoryOutputDto,
+} from '@application/dtos/repositories/role/update.dto';
+import { FindRoleByNameRepositoryOutputDto } from '@application/dtos/repositories/role/findByName.dto';
+import { FindAllRolesRepositoryOutputDto } from '@application/dtos/repositories/role/findAll.dto';
+import { FindRoleRepositoryOutputDto } from '@application/dtos/repositories/role/find.dto';
 
 @Injectable()
 export class RoleRepository implements RoleRepositoryInterface {
@@ -28,15 +32,31 @@ export class RoleRepository implements RoleRepositoryInterface {
   };
 
   async create(
-    input: CreateRepositoryInputDto,
-  ): Promise<CreateRepositoryOutputDto> {
+    input: CreateRoleRepositoryInputDto,
+  ): Promise<CreateRoleRepositoryOutputDto> {
     return this.model.create({
       data: input,
       select: this.defaultFieldsToReturn,
     });
   }
 
-  async findByName(name: string): Promise<FindByNameRepositoryOutputDto> {
+  async update(
+    input: UpdateRoleRepositoryInputDto,
+  ): Promise<UpdateRoleRepositoryOutputDto> {
+    return this.model.update({
+      where: {
+        ...this.softDeleteClause,
+        id: input.id,
+      },
+      data: {
+        name: input.name,
+        description: input.description,
+      },
+      select: this.defaultFieldsToReturn,
+    });
+  }
+
+  async findByName(name: string): Promise<FindRoleByNameRepositoryOutputDto> {
     return this.model.findFirst({
       where: {
         ...this.softDeleteClause,
@@ -46,14 +66,14 @@ export class RoleRepository implements RoleRepositoryInterface {
     });
   }
 
-  async findAll(): Promise<FindAllRepositoryOutputDto> {
+  async findAll(): Promise<FindAllRolesRepositoryOutputDto> {
     return this.model.findMany({
       select: this.defaultFieldsToReturn,
       where: { ...this.softDeleteClause },
     });
   }
 
-  async find(id: number): Promise<FindRepositoryOutputDto> {
+  async find(id: number): Promise<FindRoleRepositoryOutputDto> {
     return this.model.findFirst({
       where: { ...this.softDeleteClause, id },
       select: this.defaultFieldsToReturn,

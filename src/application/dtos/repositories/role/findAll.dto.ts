@@ -6,4 +6,4 @@ interface Role {
   updatedAt: Date;
 }
 
-export type FindAllRepositoryOutputDto = Role[];
+export type FindAllRolesRepositoryOutputDto = Role[];

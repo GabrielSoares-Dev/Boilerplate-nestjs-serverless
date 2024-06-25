@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Role } from '@domain/entities/role.entity';
 import { CreateRoleUseCaseInputDto } from '@application/dtos/useCases/role/create.dto';
-import { FindByNameRepositoryOutputDto } from '@application/dtos/repositories/role/findByName.dto';
+import { FindRoleByNameRepositoryOutputDto } from '@application/dtos/repositories/role/findByName.dto';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -30,7 +30,7 @@ export class CreateRoleUseCase {
 
   protected async alreadyExists(
     name: string,
-  ): Promise<FindByNameRepositoryOutputDto> {
+  ): Promise<FindRoleByNameRepositoryOutputDto> {
     return this.roleRepository.findByName(name);
   }
 

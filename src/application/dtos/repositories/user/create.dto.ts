@@ -1,11 +1,11 @@
-export interface CreateRepositoryInputDto {
+export interface CreateUserRepositoryInputDto {
   name: string;
   email: string;
   phoneNumber: string;
   password: string;
 }
 
-export interface CreateRepositoryOutputDto {
+export interface CreateUserRepositoryOutputDto {
   id: number;
   name: string;
   email: string;

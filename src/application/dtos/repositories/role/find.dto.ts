@@ -1,4 +1,4 @@
-export interface FindRepositoryOutputDto {
+export interface FindRoleRepositoryOutputDto {
   id: number;
   name: string;
   description?: string;

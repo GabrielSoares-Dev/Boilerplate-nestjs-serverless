@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { User } from '@domain/entities/user.entity';
 import { CreateUserUseCaseInputDto } from '@application/dtos/useCases/user/create.dto';
-import { FindByEmailRepositoryOutputDto } from '@application/dtos/repositories/user/findByEmail.dto';
+import { FindUserByEmailRepositoryOutputDto } from '@application/dtos/repositories/user/findByEmail.dto';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -37,7 +37,7 @@ export class CreateUserUseCase {
 
   protected async alreadyExists(
     email: string,
-  ): Promise<FindByEmailRepositoryOutputDto> {
+  ): Promise<FindUserByEmailRepositoryOutputDto> {
     return this.userRepository.findByEmail(email);
   }
 

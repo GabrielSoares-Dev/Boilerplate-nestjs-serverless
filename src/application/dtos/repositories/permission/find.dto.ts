@@ -1,4 +1,4 @@
-export interface FindRepositoryOutputDto {
+export interface FindPermissionRepositoryOutputDto {
   id: number;
   name: string;
   description?: string;

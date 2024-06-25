@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@infra/services/prisma.service';
 import { UserRepositoryInterface } from '@application/repositories/user.repository';
 import {
-  CreateRepositoryInputDto,
-  CreateRepositoryOutputDto,
+  CreateUserRepositoryInputDto,
+  CreateUserRepositoryOutputDto,
 } from '@application/dtos/repositories/user/create.dto';
-import { FindByEmailRepositoryOutputDto } from '@application/dtos/repositories/user/findByEmail.dto';
+import { FindUserByEmailRepositoryOutputDto } from '@application/dtos/repositories/user/findByEmail.dto';
 
 @Injectable()
 export class UserRepository implements UserRepositoryInterface {
@@ -23,15 +23,17 @@ export class UserRepository implements UserRepositoryInterface {
   };
 
   async create(
-    input: CreateRepositoryInputDto,
-  ): Promise<CreateRepositoryOutputDto> {
+    input: CreateUserRepositoryInputDto,
+  ): Promise<CreateUserRepositoryOutputDto> {
     return this.model.create({
       data: input,
       select: this.defaultFieldsToReturn,
     });
   }
 
-  async findByEmail(email: string): Promise<FindByEmailRepositoryOutputDto> {
+  async findByEmail(
+    email: string,
+  ): Promise<FindUserByEmailRepositoryOutputDto> {
     return this.model.findFirst({
       where: {
         email,

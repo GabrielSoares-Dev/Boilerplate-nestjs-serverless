@@ -1,4 +1,4 @@
-export interface DeleteRepositoryOutputDto {
+export interface DeletePermissionRepositoryOutputDto {
   id: number;
   name: string;
   description?: string;

@@ -2,17 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@infra/services/prisma.service';
 import { PermissionRepositoryInterface } from '@application/repositories/permission.repository';
 import {
-  CreateRepositoryInputDto,
-  CreateRepositoryOutputDto,
+  CreatePermissionRepositoryInputDto,
+  CreatePermissionRepositoryOutputDto,
 } from '@application/dtos/repositories/permission/create.dto';
 import {
-  UpdateRepositoryInputDto,
-  UpdateRepositoryOutputDto,
+  UpdatePermissionRepositoryInputDto,
+  UpdatePermissionRepositoryOutputDto,
 } from '@application/dtos/repositories/permission/update.dto';
-import { FindByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
-import { FindAllRepositoryOutputDto } from '@application/dtos/repositories/permission/findAll.dto';
-import { FindRepositoryOutputDto } from '@application/dtos/repositories/permission/find.dto';
-import { DeleteRepositoryOutputDto } from '@application/dtos/repositories/permission/delete.dto';
+import { FindPermissionByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
+import { FindAllPermissionsRepositoryOutputDto } from '@application/dtos/repositories/permission/findAll.dto';
+import { FindPermissionRepositoryOutputDto } from '@application/dtos/repositories/permission/find.dto';
+import { DeletePermissionRepositoryOutputDto } from '@application/dtos/repositories/permission/delete.dto';
 
 @Injectable()
 export class PermissionRepository implements PermissionRepositoryInterface {
@@ -33,8 +33,8 @@ export class PermissionRepository implements PermissionRepositoryInterface {
   };
 
   async create(
-    input: CreateRepositoryInputDto,
-  ): Promise<CreateRepositoryOutputDto> {
+    input: CreatePermissionRepositoryInputDto,
+  ): Promise<CreatePermissionRepositoryOutputDto> {
     return this.model.create({
       data: input,
       select: this.defaultFieldsToReturn,
@@ -42,8 +42,8 @@ export class PermissionRepository implements PermissionRepositoryInterface {
   }
 
   async update(
-    input: UpdateRepositoryInputDto,
-  ): Promise<UpdateRepositoryOutputDto> {
+    input: UpdatePermissionRepositoryInputDto,
+  ): Promise<UpdatePermissionRepositoryOutputDto> {
     return this.model.update({
       where: {
         ...this.softDeleteClause,
@@ -57,7 +57,9 @@ export class PermissionRepository implements PermissionRepositoryInterface {
     });
   }
 
-  async findByName(name: string): Promise<FindByNameRepositoryOutputDto> {
+  async findByName(
+    name: string,
+  ): Promise<FindPermissionByNameRepositoryOutputDto> {
     return this.model.findFirst({
       where: {
         ...this.softDeleteClause,
@@ -67,21 +69,21 @@ export class PermissionRepository implements PermissionRepositoryInterface {
     });
   }
 
-  async findAll(): Promise<FindAllRepositoryOutputDto> {
+  async findAll(): Promise<FindAllPermissionsRepositoryOutputDto> {
     return this.model.findMany({
       select: this.defaultFieldsToReturn,
       where: { ...this.softDeleteClause },
     });
   }
 
-  async find(id: number): Promise<FindRepositoryOutputDto> {
+  async find(id: number): Promise<FindPermissionRepositoryOutputDto> {
     return this.model.findFirst({
       where: { ...this.softDeleteClause, id },
       select: this.defaultFieldsToReturn,
     });
   }
 
-  async delete(id: number): Promise<DeleteRepositoryOutputDto> {
+  async delete(id: number): Promise<DeletePermissionRepositoryOutputDto> {
     return this.model.update({
       where: { id },
       data: { deletedAt: new Date() },

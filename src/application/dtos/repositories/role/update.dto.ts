@@ -1,10 +1,10 @@
-export interface UpdatePermissionRepositoryInputDto {
+export interface UpdateRoleRepositoryInputDto {
   id: number;
   name?: string;
   description?: string;
 }
 
-export interface UpdatePermissionRepositoryOutputDto {
+export interface UpdateRoleRepositoryOutputDto {
   id: number;
   name: string;
   description?: string;

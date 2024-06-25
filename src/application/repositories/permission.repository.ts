@@ -1,23 +1,27 @@
 import {
-  CreateRepositoryInputDto,
-  CreateRepositoryOutputDto,
+  CreatePermissionRepositoryInputDto,
+  CreatePermissionRepositoryOutputDto,
 } from '@application/dtos/repositories/permission/create.dto';
 import {
-  UpdateRepositoryInputDto,
-  UpdateRepositoryOutputDto,
+  UpdatePermissionRepositoryInputDto,
+  UpdatePermissionRepositoryOutputDto,
 } from '@application/dtos/repositories/permission/update.dto';
-import { FindByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
-import { FindAllRepositoryOutputDto } from '@application/dtos/repositories/permission/findAll.dto';
-import { FindRepositoryOutputDto } from '@application/dtos/repositories/permission/find.dto';
-import { DeleteRepositoryOutputDto } from '@application/dtos/repositories/permission/delete.dto';
+import { FindPermissionByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
+import { FindAllPermissionsRepositoryOutputDto } from '@application/dtos/repositories/permission/findAll.dto';
+import { FindPermissionRepositoryOutputDto } from '@application/dtos/repositories/permission/find.dto';
+import { DeletePermissionRepositoryOutputDto } from '@application/dtos/repositories/permission/delete.dto';
 
 export const PERMISSION_REPOSITORY_TOKEN = 'PERMISSION_REPOSITORY_TOKEN';
 
 export interface PermissionRepositoryInterface {
-  create(input: CreateRepositoryInputDto): Promise<CreateRepositoryOutputDto>;
-  update(input: UpdateRepositoryInputDto): Promise<UpdateRepositoryOutputDto>;
-  findByName(name: string): Promise<FindByNameRepositoryOutputDto>;
-  findAll(): Promise<FindAllRepositoryOutputDto>;
-  find(id: number): Promise<FindRepositoryOutputDto>;
-  delete(id: number): Promise<DeleteRepositoryOutputDto>;
+  create(
+    input: CreatePermissionRepositoryInputDto,
+  ): Promise<CreatePermissionRepositoryOutputDto>;
+  update(
+    input: UpdatePermissionRepositoryInputDto,
+  ): Promise<UpdatePermissionRepositoryOutputDto>;
+  findByName(name: string): Promise<FindPermissionByNameRepositoryOutputDto>;
+  findAll(): Promise<FindAllPermissionsRepositoryOutputDto>;
+  find(id: number): Promise<FindPermissionRepositoryOutputDto>;
+  delete(id: number): Promise<DeletePermissionRepositoryOutputDto>;
 }

@@ -6,4 +6,4 @@ interface Permission {
   updatedAt: Date;
 }
 
-export type FindAllRepositoryOutputDto = Permission[];
+export type FindAllPermissionsRepositoryOutputDto = Permission[];

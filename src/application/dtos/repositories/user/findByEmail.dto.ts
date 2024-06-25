@@ -1,4 +1,4 @@
-export interface FindByEmailRepositoryOutputDto {
+export interface FindUserByEmailRepositoryOutputDto {
   id: number;
   name: string;
   email: string;

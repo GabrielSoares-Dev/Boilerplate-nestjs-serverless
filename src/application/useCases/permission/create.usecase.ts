@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Permission } from '@domain/entities/permission.entity';
 import { CreatePermissionUseCaseInputDto } from '@application/dtos/useCases/permission/create.dto';
-import { FindByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
+import { FindPermissionByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -30,7 +30,7 @@ export class CreatePermissionUseCase {
 
   protected async alreadyExists(
     name: string,
-  ): Promise<FindByNameRepositoryOutputDto> {
+  ): Promise<FindPermissionByNameRepositoryOutputDto> {
     return this.permissionRepository.findByName(name);
   }
 

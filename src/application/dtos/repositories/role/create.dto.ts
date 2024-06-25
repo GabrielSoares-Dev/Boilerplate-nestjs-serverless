@@ -1,9 +1,9 @@
-export interface CreateRepositoryInputDto {
+export interface CreateRoleRepositoryInputDto {
   name: string;
   description?: string;
 }
 
-export interface CreateRepositoryOutputDto {
+export interface CreateRoleRepositoryOutputDto {
   id: number;
   name: string;
   description?: string;

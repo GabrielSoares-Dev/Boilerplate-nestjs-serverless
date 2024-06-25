@@ -3,7 +3,7 @@ import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
 } from '@application/services/logger.service';
-import { FindRepositoryOutputDto } from '@application/dtos/repositories/permission/find.dto';
+import { FindPermissionRepositoryOutputDto } from '@application/dtos/repositories/permission/find.dto';
 import { DeletePermissionUseCaseInputDto } from '@application/dtos/useCases/permission/delete.dto';
 import {
   PERMISSION_REPOSITORY_TOKEN,
@@ -23,7 +23,7 @@ export class DeletePermissionUseCase {
 
   protected async foundPermission(
     id: number,
-  ): Promise<FindRepositoryOutputDto> {
+  ): Promise<FindPermissionRepositoryOutputDto> {
     return this.permissionRepository.find(id);
   }
 
