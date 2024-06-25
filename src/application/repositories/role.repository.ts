@@ -9,6 +9,7 @@ import {
 import { FindRoleByNameRepositoryOutputDto } from '@application/dtos/repositories/role/findByName.dto';
 import { FindAllRolesRepositoryOutputDto } from '@application/dtos/repositories/role/findAll.dto';
 import { FindRoleRepositoryOutputDto } from '@application/dtos/repositories/role/find.dto';
+import { DeleteRoleRepositoryOutputDto } from '@application/dtos/repositories/role/delete.dto';
 
 export const ROLE_REPOSITORY_TOKEN = 'ROLE_REPOSITORY_TOKEN';
 
@@ -22,4 +23,5 @@ export interface RoleRepositoryInterface {
   findByName(name: string): Promise<FindRoleByNameRepositoryOutputDto>;
   findAll(): Promise<FindAllRolesRepositoryOutputDto>;
   find(id: number): Promise<FindRoleRepositoryOutputDto>;
+  delete(id: number): Promise<DeleteRoleRepositoryOutputDto>;
 }

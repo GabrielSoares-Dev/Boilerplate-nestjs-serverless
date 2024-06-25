@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Patch,
+  Delete,
   Inject,
   Res,
   HttpStatus,
@@ -16,6 +17,7 @@ import {
   UpdateRoleSerializerInputDto,
   UpdateRoleSerializerInputParamDto,
 } from '@infra/http/serializers/role/update.serializer';
+import { DeleteRoleSerializerInputDto } from '@infra/http/serializers/role/delete.serializer';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -24,6 +26,7 @@ import { CreateRoleUseCase } from '@application/useCases/role/create.usecase';
 import { FindAllRolesUseCase } from '@application/useCases/role/findAll.usecase';
 import { FindRoleUseCase } from '@application/useCases/role/find.usecase';
 import { UpdateRoleUseCase } from '@application/useCases/role/update.usecase';
+import { DeleteRoleUseCase } from '@application/useCases/role/delete.usecase';
 import { Response } from 'express';
 
 @Controller({ path: 'role', version: '1' })
@@ -35,6 +38,7 @@ export class RoleController {
     private findAllUseCase: FindAllRolesUseCase,
     private findUseCase: FindRoleUseCase,
     private updateUseCase: UpdateRoleUseCase,
+    private deleteUseCase: DeleteRoleUseCase,
   ) {}
 
   private context = 'RoleController';
@@ -158,32 +162,32 @@ export class RoleController {
     }
   }
 
-  //   @Delete(':id')
-  //   async remove(
-  //     @Param() input: DeletePermissionSerializerInputDto,
-  //     @Res() res: Response,
-  //   ) {
-  //     this.loggerService.info(`START ${this.context} remove`);
-  //     this.loggerService.debug('input', input);
+  @Delete(':id')
+  async remove(
+    @Param() input: DeleteRoleSerializerInputDto,
+    @Res() res: Response,
+  ) {
+    this.loggerService.info(`START ${this.context} remove`);
+    this.loggerService.debug('input', input);
 
-  //     try {
-  //       await this.deleteUseCase.run({ id: Number(input.id) });
-  //       this.loggerService.info(`FINISH ${this.context} remove`);
+    try {
+      await this.deleteUseCase.run({ id: Number(input.id) });
+      this.loggerService.info(`FINISH ${this.context} remove`);
 
-  //       const response = {
-  //         statusCode: HttpStatus.OK,
-  //         message: 'Permission deleted successfully',
-  //       };
-  //       return res.json(response);
-  //     } catch (error) {
-  //       const errorMessage = error.message;
-  //       let httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Role deleted successfully',
+      };
+      return res.json(response);
+    } catch (error) {
+      const errorMessage = error.message;
+      let httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
 
-  //       const invalidIdError = errorMessage === 'Invalid id';
-  //       if (invalidIdError) httpCode = HttpStatus.BAD_REQUEST;
+      const invalidIdError = errorMessage === 'Invalid id';
+      if (invalidIdError) httpCode = HttpStatus.BAD_REQUEST;
 
-  //       this.loggerService.error('error', errorMessage);
-  //       throw new HttpException(errorMessage, httpCode);
-  //     }
-  //   }
+      this.loggerService.error('error', errorMessage);
+      throw new HttpException(errorMessage, httpCode);
+    }
+  }
 }

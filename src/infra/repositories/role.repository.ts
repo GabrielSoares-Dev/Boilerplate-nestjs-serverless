@@ -12,6 +12,7 @@ import {
 import { FindRoleByNameRepositoryOutputDto } from '@application/dtos/repositories/role/findByName.dto';
 import { FindAllRolesRepositoryOutputDto } from '@application/dtos/repositories/role/findAll.dto';
 import { FindRoleRepositoryOutputDto } from '@application/dtos/repositories/role/find.dto';
+import { DeleteRoleRepositoryOutputDto } from '@application/dtos/repositories/role/delete.dto';
 
 @Injectable()
 export class RoleRepository implements RoleRepositoryInterface {
@@ -77,6 +78,13 @@ export class RoleRepository implements RoleRepositoryInterface {
     return this.model.findFirst({
       where: { ...this.softDeleteClause, id },
       select: this.defaultFieldsToReturn,
+    });
+  }
+
+  async delete(id: number): Promise<DeleteRoleRepositoryOutputDto> {
+    return this.model.update({
+      where: { id },
+      data: { deletedAt: new Date() },
     });
   }
 }
