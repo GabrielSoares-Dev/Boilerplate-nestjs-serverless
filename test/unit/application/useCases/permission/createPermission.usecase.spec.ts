@@ -36,7 +36,7 @@ describe('CreatePermissionUseCase', () => {
     );
   });
 
-  it('Should be create user', async () => {
+  it('Should be create permission', async () => {
     const createSpyOn = jest.spyOn(permissionRepository, 'create');
 
     await useCase.run(input);
