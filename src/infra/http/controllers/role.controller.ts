@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   Inject,
   Res,
   HttpStatus,
@@ -13,6 +14,7 @@ import {
   LoggerServiceInterface,
 } from '@application/services/logger.service';
 import { CreateRoleUseCase } from '@application/useCases/role/create.usecase';
+import { FindAllRolesUseCase } from '@application/useCases/role/findAll.usecase';
 import { Response } from 'express';
 
 @Controller({ path: 'role', version: '1' })
@@ -21,6 +23,7 @@ export class RoleController {
     @Inject(LOGGER_SERVICE_TOKEN)
     private readonly loggerService: LoggerServiceInterface,
     private createUseCase: CreateRoleUseCase,
+    private findAllUseCase: FindAllRolesUseCase,
   ) {}
 
   private context = 'RoleController';
@@ -54,29 +57,29 @@ export class RoleController {
     }
   }
 
-  //   @Get()
-  //   async findAll(@Res() res: Response) {
-  //     this.loggerService.info(`START ${this.context} findAll`);
-  //     try {
-  //       const output = await this.findAllUseCase.run();
-  //       this.loggerService.debug('output', output);
+  @Get()
+  async findAll(@Res() res: Response) {
+    this.loggerService.info(`START ${this.context} findAll`);
+    try {
+      const output = await this.findAllUseCase.run();
+      this.loggerService.debug('output', output);
 
-  //       this.loggerService.info(`FINISH ${this.context} findAll`);
+      this.loggerService.info(`FINISH ${this.context} findAll`);
 
-  //       const response = {
-  //         statusCode: HttpStatus.OK,
-  //         message: 'Found permissions',
-  //         content: output,
-  //       };
-  //       return res.json(response);
-  //     } catch (error) {
-  //       const errorMessage = error.message;
-  //       const httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Found roles',
+        content: output,
+      };
+      return res.json(response);
+    } catch (error) {
+      const errorMessage = error.message;
+      const httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
 
-  //       this.loggerService.error('error', errorMessage);
-  //       throw new HttpException(errorMessage, httpCode);
-  //     }
-  //   }
+      this.loggerService.error('error', errorMessage);
+      throw new HttpException(errorMessage, httpCode);
+    }
+  }
 
   //   @Get(':id')
   //   async findOne(

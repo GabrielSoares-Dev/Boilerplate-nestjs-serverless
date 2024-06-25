@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RoleController } from '@infra/http/controllers/role.controller';
 import { CreateRoleUseCase } from '@application/useCases/role/create.usecase';
+import { FindAllRolesUseCase } from '@application/useCases/role/findAll.usecase';
 import { ROLE_REPOSITORY_TOKEN } from '@application/repositories/role.repository';
 import { RoleRepository } from '@infra/repositories/role.repository';
 
@@ -8,6 +9,7 @@ import { RoleRepository } from '@infra/repositories/role.repository';
   controllers: [RoleController],
   providers: [
     CreateRoleUseCase,
+    FindAllRolesUseCase,
     {
       provide: ROLE_REPOSITORY_TOKEN,
       useClass: RoleRepository,

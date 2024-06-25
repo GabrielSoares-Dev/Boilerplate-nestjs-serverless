@@ -6,6 +6,7 @@ import {
   CreateRepositoryOutputDto,
 } from '@application/dtos/repositories/role/create.dto';
 import { FindByNameRepositoryOutputDto } from '@application/dtos/repositories/role/findByName.dto';
+import { FindAllRepositoryOutputDto } from '@application/dtos/repositories/role/findAll.dto';
 
 @Injectable()
 export class RoleRepository implements RoleRepositoryInterface {
@@ -41,6 +42,13 @@ export class RoleRepository implements RoleRepositoryInterface {
         name,
       },
       select: this.defaultFieldsToReturn,
+    });
+  }
+
+  async findAll(): Promise<FindAllRepositoryOutputDto> {
+    return this.model.findMany({
+      select: this.defaultFieldsToReturn,
+      where: { ...this.softDeleteClause },
     });
   }
 }
