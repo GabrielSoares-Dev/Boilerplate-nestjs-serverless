@@ -4,8 +4,8 @@ import {
   LoggerServiceInterface,
 } from '@application/services/logger.service';
 import {
-  FindPermissionUseCaseInputDto,
-  FindPermissionUseCaseOutputDto,
+  FindUseCaseInputDto,
+  FindUseCaseOutputDto,
 } from '@application/dtos/useCases/permission/find.dto';
 import {
   PERMISSION_REPOSITORY_TOKEN,
@@ -23,9 +23,7 @@ export class FindPermissionUseCase {
     private readonly permissionRepository: PermissionRepositoryInterface,
   ) {}
 
-  async run(
-    input: FindPermissionUseCaseInputDto,
-  ): Promise<FindPermissionUseCaseOutputDto> {
+  async run(input: FindUseCaseInputDto): Promise<FindUseCaseOutputDto> {
     this.loggerService.info('START FindPermissionUseCase');
 
     const output = await this.permissionRepository.find(input.id);

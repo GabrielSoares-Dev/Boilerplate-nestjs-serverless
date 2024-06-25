@@ -7,14 +7,17 @@ import {
   HttpStatus,
   HttpException,
   Body,
+  Param,
 } from '@nestjs/common';
 import { CreateRoleSerializerInputDto } from '@infra/http/serializers/role/create.serializer';
+import { FindRoleSerializerInputDto } from '../serializers/role/find.serializer';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
 } from '@application/services/logger.service';
 import { CreateRoleUseCase } from '@application/useCases/role/create.usecase';
 import { FindAllRolesUseCase } from '@application/useCases/role/findAll.usecase';
+import { FindRoleUseCase } from '@application/useCases/role/find.usecase';
 import { Response } from 'express';
 
 @Controller({ path: 'role', version: '1' })
@@ -24,6 +27,7 @@ export class RoleController {
     private readonly loggerService: LoggerServiceInterface,
     private createUseCase: CreateRoleUseCase,
     private findAllUseCase: FindAllRolesUseCase,
+    private findUseCase: FindRoleUseCase,
   ) {}
 
   private context = 'RoleController';
@@ -81,36 +85,36 @@ export class RoleController {
     }
   }
 
-  //   @Get(':id')
-  //   async findOne(
-  //     @Param() input: FindPermissionSerializerInputDto,
-  //     @Res() res: Response,
-  //   ) {
-  //     this.loggerService.info(`START ${this.context} findOne`);
-  //     this.loggerService.debug('input', input);
-  //     try {
-  //       const output = await this.findUseCase.run({ id: Number(input.id) });
-  //       this.loggerService.debug('output', output);
+  @Get(':id')
+  async findOne(
+    @Param() input: FindRoleSerializerInputDto,
+    @Res() res: Response,
+  ) {
+    this.loggerService.info(`START ${this.context} findOne`);
+    this.loggerService.debug('input', input);
+    try {
+      const output = await this.findUseCase.run({ id: Number(input.id) });
+      this.loggerService.debug('output', output);
 
-  //       this.loggerService.info(`FINISH ${this.context} findOne`);
+      this.loggerService.info(`FINISH ${this.context} findOne`);
 
-  //       const response = {
-  //         statusCode: HttpStatus.OK,
-  //         message: 'Permission found',
-  //         content: output,
-  //       };
-  //       return res.json(response);
-  //     } catch (error) {
-  //       const errorMessage = error.message;
-  //       let httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Role found',
+        content: output,
+      };
+      return res.json(response);
+    } catch (error) {
+      const errorMessage = error.message;
+      let httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
 
-  //       const invalidIdError = errorMessage === 'Invalid id';
-  //       if (invalidIdError) httpCode = HttpStatus.BAD_REQUEST;
+      const invalidIdError = errorMessage === 'Invalid id';
+      if (invalidIdError) httpCode = HttpStatus.BAD_REQUEST;
 
-  //       this.loggerService.error('error', errorMessage);
-  //       throw new HttpException(errorMessage, httpCode);
-  //     }
-  //   }
+      this.loggerService.error('error', errorMessage);
+      throw new HttpException(errorMessage, httpCode);
+    }
+  }
 
   //   @Patch(':id')
   //   async update(
