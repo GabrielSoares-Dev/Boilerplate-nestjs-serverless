@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Patch,
+  Delete,
   Inject,
   Res,
   HttpStatus,
@@ -16,6 +17,7 @@ import {
   UpdatePermissionSerializerInputDto,
   UpdatePermissionSerializerInputParamDto,
 } from '@infra/http/serializers/permission/update.serializer';
+import { DeletePermissionSerializerInputDto } from '../serializers/permission/delete.serializer';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -24,6 +26,7 @@ import { CreatePermissionUseCase } from '@application/useCases/permission/create
 import { FindAllPermissionsUseCase } from '@application/useCases/permission/findAll.usecase';
 import { FindPermissionUseCase } from '@application/useCases/permission/find.usecase';
 import { UpdatePermissionUseCase } from '@application/useCases/permission/update.usecase';
+import { DeletePermissionUseCase } from '@application/useCases/permission/delete.usecase';
 import { Response } from 'express';
 
 @Controller({ path: 'permission', version: '1' })
@@ -35,6 +38,7 @@ export class PermissionController {
     private findAllUseCase: FindAllPermissionsUseCase,
     private findUseCase: FindPermissionUseCase,
     private updateUseCase: UpdatePermissionUseCase,
+    private deleteUseCase: DeletePermissionUseCase,
   ) {}
 
   private context = 'PermissionController';
@@ -134,17 +138,45 @@ export class PermissionController {
     this.loggerService.debug('input', input);
 
     try {
-      const output = await this.updateUseCase.run({
+      await this.updateUseCase.run({
         id: Number(params.id),
         ...input,
       });
-      this.loggerService.debug('output', output);
 
       this.loggerService.info(`FINISH ${this.context} update`);
 
       const response = {
         statusCode: HttpStatus.OK,
         message: 'Permission Updated successfully',
+      };
+      return res.json(response);
+    } catch (error) {
+      const errorMessage = error.message;
+      let httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
+
+      const invalidIdError = errorMessage === 'Invalid id';
+      if (invalidIdError) httpCode = HttpStatus.BAD_REQUEST;
+
+      this.loggerService.error('error', errorMessage);
+      throw new HttpException(errorMessage, httpCode);
+    }
+  }
+
+  @Delete(':id')
+  async remove(
+    @Param() input: DeletePermissionSerializerInputDto,
+    @Res() res: Response,
+  ) {
+    this.loggerService.info(`START ${this.context} remove`);
+    this.loggerService.debug('input', input);
+
+    try {
+      await this.deleteUseCase.run({ id: Number(input.id) });
+      this.loggerService.info(`FINISH ${this.context} remove`);
+
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Permission deleted successfully',
       };
       return res.json(response);
     } catch (error) {

@@ -9,6 +9,7 @@ import {
 import { FindByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
 import { FindAllRepositoryOutputDto } from '@application/dtos/repositories/permission/findAll.dto';
 import { FindRepositoryOutputDto } from '@application/dtos/repositories/permission/find.dto';
+import { DeleteRepositoryOutputDto } from '@application/dtos/repositories/permission/delete.dto';
 
 export const PERMISSION_REPOSITORY_TOKEN = 'PERMISSION_REPOSITORY_TOKEN';
 
@@ -18,4 +19,5 @@ export interface PermissionRepositoryInterface {
   findByName(name: string): Promise<FindByNameRepositoryOutputDto>;
   findAll(): Promise<FindAllRepositoryOutputDto>;
   find(id: number): Promise<FindRepositoryOutputDto>;
+  delete(id: number): Promise<DeleteRepositoryOutputDto>;
 }

@@ -4,6 +4,7 @@ import { CreatePermissionUseCase } from '@application/useCases/permission/create
 import { FindAllPermissionsUseCase } from '@application/useCases/permission/findAll.usecase';
 import { FindPermissionUseCase } from '@application/useCases/permission/find.usecase';
 import { UpdatePermissionUseCase } from '@application/useCases/permission/update.usecase';
+import { DeletePermissionUseCase } from '@application/useCases/permission/delete.usecase';
 import { PERMISSION_REPOSITORY_TOKEN } from '@application/repositories/permission.repository';
 import { PermissionRepository } from '@infra/repositories/permission.repository';
 
@@ -14,6 +15,7 @@ import { PermissionRepository } from '@infra/repositories/permission.repository'
     FindAllPermissionsUseCase,
     FindPermissionUseCase,
     UpdatePermissionUseCase,
+    DeletePermissionUseCase,
     {
       provide: PERMISSION_REPOSITORY_TOKEN,
       useClass: PermissionRepository,

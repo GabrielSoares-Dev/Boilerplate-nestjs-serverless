@@ -12,6 +12,7 @@ import {
 import { FindByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
 import { FindAllRepositoryOutputDto } from '@application/dtos/repositories/permission/findAll.dto';
 import { FindRepositoryOutputDto } from '@application/dtos/repositories/permission/find.dto';
+import { DeleteRepositoryOutputDto } from '@application/dtos/repositories/permission/delete.dto';
 
 @Injectable()
 export class PermissionRepository implements PermissionRepositoryInterface {
@@ -25,6 +26,10 @@ export class PermissionRepository implements PermissionRepositoryInterface {
     description: true,
     createdAt: true,
     updatedAt: true,
+  };
+
+  protected softDeleteClause = {
+    deletedAt: null,
   };
 
   async create(
@@ -41,6 +46,7 @@ export class PermissionRepository implements PermissionRepositoryInterface {
   ): Promise<UpdateRepositoryOutputDto> {
     return this.model.update({
       where: {
+        ...this.softDeleteClause,
         id: input.id,
       },
       data: {
@@ -54,6 +60,7 @@ export class PermissionRepository implements PermissionRepositoryInterface {
   async findByName(name: string): Promise<FindByNameRepositoryOutputDto> {
     return this.model.findFirst({
       where: {
+        ...this.softDeleteClause,
         name,
       },
       select: this.defaultFieldsToReturn,
@@ -61,13 +68,23 @@ export class PermissionRepository implements PermissionRepositoryInterface {
   }
 
   async findAll(): Promise<FindAllRepositoryOutputDto> {
-    return this.model.findMany({ select: this.defaultFieldsToReturn });
+    return this.model.findMany({
+      select: this.defaultFieldsToReturn,
+      where: { ...this.softDeleteClause },
+    });
   }
 
   async find(id: number): Promise<FindRepositoryOutputDto> {
     return this.model.findFirst({
-      where: { id },
+      where: { ...this.softDeleteClause, id },
       select: this.defaultFieldsToReturn,
+    });
+  }
+
+  async delete(id: number): Promise<DeleteRepositoryOutputDto> {
+    return this.model.update({
+      where: { id },
+      data: { deletedAt: new Date() },
     });
   }
 }
