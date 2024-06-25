@@ -2,14 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from '@infra/modules/app.module';
 import { HttpStatus } from '@nestjs/common';
-import { deleteUsers, createUser } from '@test/helpers/db/factory/user.factory';
+import { create } from '@test/helpers/db/factory/user.factory';
+import { faker } from '@faker-js/faker';
 import * as request from 'supertest';
 
 const path = '/v1/user';
 
 const input = {
-  name: 'test',
-  email: 'test@gmail.com',
+  name: faker.person.firstName(),
+  email: faker.internet.email(),
   password: 'Test@2312',
   phoneNumber: '11991742156',
 };
@@ -32,10 +33,6 @@ describe('Create User', () => {
     await app.init();
   });
 
-  beforeEach(async () => {
-    await deleteUsers();
-  });
-
   it('Should be create user with success', () => {
     const expectedStatusCode = HttpStatus.CREATED;
     const expectedResponse = {
@@ -50,19 +47,18 @@ describe('Create User', () => {
   });
 
   it('Should be failure when user already exists', async () => {
-    const user = {
-      name: 'test',
-      email: 'test@gmail.com',
-      password: 'Test@2312',
-      phoneNumber: '11991742156',
-    };
-
-    await createUser(user);
+    const userCreatedBefore = await create();
 
     const expectedStatusCode = HttpStatus.BAD_REQUEST;
     const expectedResponse = {
       statusCode: expectedStatusCode,
       message: 'User already exists',
+    };
+    const input = {
+      name: faker.person.firstName(),
+      email: userCreatedBefore.email,
+      password: 'Test@2312',
+      phoneNumber: '11991742156',
     };
     return request(app.getHttpServer())
       .post(path)

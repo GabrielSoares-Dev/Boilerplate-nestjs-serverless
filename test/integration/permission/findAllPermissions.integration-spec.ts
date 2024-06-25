@@ -2,16 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '@infra/modules/app.module';
 import { HttpStatus } from '@nestjs/common';
-import {
-  deletePermissions,
-  createPermission,
-} from '@test/helpers/db/factory/permission.factory';
+import { create } from '@test/helpers/db/factory/permission.factory';
 import * as request from 'supertest';
 
 const path = '/v1/permission';
-
-const createdAt = new Date();
-const updatedAt = new Date();
 
 describe('Find all permissions', () => {
   let app: INestApplication;
@@ -26,32 +20,18 @@ describe('Find all permissions', () => {
     await app.init();
   });
 
-  beforeEach(async () => {
-    await deletePermissions();
-  });
-
   it('Should be found permissions with success', async () => {
-    const id = 30;
-    const permission = {
-      id,
-      name: 'test',
-      description: 'test',
-      createdAt,
-      updatedAt,
-    };
+    const permissionCreatedBefore = await create();
 
-    await createPermission(permission);
     const expectedStatusCode = HttpStatus.OK;
     const expectedResponse = {
       statusCode: expectedStatusCode,
       message: 'Found permissions',
       content: [
         {
-          id,
-          name: 'test',
-          description: 'test',
-          createdAt: createdAt.toISOString(),
-          updatedAt: updatedAt.toISOString(),
+          ...permissionCreatedBefore,
+          createdAt: permissionCreatedBefore.createdAt.toISOString(),
+          updatedAt: permissionCreatedBefore.updatedAt.toISOString(),
         },
       ],
     };

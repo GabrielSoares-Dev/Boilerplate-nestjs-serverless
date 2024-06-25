@@ -2,16 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from '@infra/modules/app.module';
 import { HttpStatus } from '@nestjs/common';
-import {
-  deletePermissions,
-  createPermission,
-} from '@test/helpers/db/factory/permission.factory';
+import { create } from '@test/helpers/db/factory/permission.factory';
+import { faker } from '@faker-js/faker';
 import * as request from 'supertest';
 
 const path = '/v1/permission';
-
-const createdAt = new Date();
-const updatedAt = new Date();
 
 describe('Find permission', () => {
   let app: INestApplication;
@@ -31,31 +26,18 @@ describe('Find permission', () => {
     await app.init();
   });
 
-  beforeEach(async () => {
-    await deletePermissions();
-  });
-
   it('Should be found permission with success', async () => {
-    const id = 99;
-    const permission = {
-      id,
-      name: 'test',
-      description: 'test',
-      createdAt,
-      updatedAt,
-    };
-    await createPermission(permission);
+    const permissionCreatedBefore = await create();
+    const id = permissionCreatedBefore.id;
 
     const expectedStatusCode = HttpStatus.OK;
     const expectedResponse = {
       statusCode: expectedStatusCode,
       message: 'Permission found',
       content: {
-        id,
-        name: 'test',
-        description: 'test',
-        createdAt: createdAt.toISOString(),
-        updatedAt: updatedAt.toISOString(),
+        ...permissionCreatedBefore,
+        createdAt: permissionCreatedBefore.createdAt.toISOString(),
+        updatedAt: permissionCreatedBefore.updatedAt.toISOString(),
       },
     };
 
@@ -66,7 +48,7 @@ describe('Find permission', () => {
   });
 
   it('Should be is invalid id', async () => {
-    const id = 300;
+    const id = faker.number.int({ max: 100 });
     const expectedStatusCode = HttpStatus.BAD_REQUEST;
     const expectedResponse = {
       statusCode: expectedStatusCode,

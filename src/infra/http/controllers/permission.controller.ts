@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Get,
+  Patch,
   Inject,
   Res,
   HttpStatus,
@@ -12,12 +13,17 @@ import {
 import { CreatePermissionSerializerInputDto } from '@infra/http/serializers/permission/create.serializer';
 import { FindPermissionSerializerInputDto } from '@infra/http/serializers/permission/find.serializer';
 import {
+  UpdatePermissionSerializerInputDto,
+  UpdatePermissionSerializerInputParamDto,
+} from '@infra/http/serializers/permission/update.serializer';
+import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
 } from '@application/services/logger.service';
 import { CreatePermissionUseCase } from '@application/useCases/permission/create.usecase';
 import { FindAllPermissionsUseCase } from '@application/useCases/permission/findAll.usecase';
 import { FindPermissionUseCase } from '@application/useCases/permission/find.usecase';
+import { UpdatePermissionUseCase } from '@application/useCases/permission/update.usecase';
 import { Response } from 'express';
 
 @Controller({ path: 'permission', version: '1' })
@@ -28,6 +34,7 @@ export class PermissionController {
     private createUseCase: CreatePermissionUseCase,
     private findAllUseCase: FindAllPermissionsUseCase,
     private findUseCase: FindPermissionUseCase,
+    private updateUseCase: UpdatePermissionUseCase,
   ) {}
 
   private context = 'PermissionController';
@@ -102,6 +109,42 @@ export class PermissionController {
         statusCode: HttpStatus.OK,
         message: 'Permission found',
         content: output,
+      };
+      return res.json(response);
+    } catch (error) {
+      const errorMessage = error.message;
+      let httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
+
+      const invalidIdError = errorMessage === 'Invalid id';
+      if (invalidIdError) httpCode = HttpStatus.BAD_REQUEST;
+
+      this.loggerService.error('error', errorMessage);
+      throw new HttpException(errorMessage, httpCode);
+    }
+  }
+
+  @Patch(':id')
+  async update(
+    @Param() params: UpdatePermissionSerializerInputParamDto,
+    @Body() input: UpdatePermissionSerializerInputDto,
+    @Res() res: Response,
+  ) {
+    this.loggerService.info(`START ${this.context} update`);
+    this.loggerService.debug('id', params.id);
+    this.loggerService.debug('input', input);
+
+    try {
+      const output = await this.updateUseCase.run({
+        id: Number(params.id),
+        ...input,
+      });
+      this.loggerService.debug('output', output);
+
+      this.loggerService.info(`FINISH ${this.context} update`);
+
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Permission Updated successfully',
       };
       return res.json(response);
     } catch (error) {
