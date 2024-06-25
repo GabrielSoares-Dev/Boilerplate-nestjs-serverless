@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { FindAllUseCaseOutputDto } from '@application/dtos/useCases/permission/findAll.dto';
+import { FindAllUseCaseOutputDto } from '@application/dtos/useCases/role/findAll.dto';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
