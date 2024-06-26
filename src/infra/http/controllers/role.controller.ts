@@ -10,6 +10,7 @@ import {
   HttpException,
   Body,
   Param,
+  HttpCode,
 } from '@nestjs/common';
 import { CreateRoleSerializerInputDto } from '@infra/http/serializers/role/create.serializer';
 import { FindRoleSerializerInputDto } from '@infra/http/serializers/role/find.serializer';
@@ -18,6 +19,7 @@ import {
   UpdateRoleSerializerInputParamDto,
 } from '@infra/http/serializers/role/update.serializer';
 import { DeleteRoleSerializerInputDto } from '@infra/http/serializers/role/delete.serializer';
+import { SyncPermissionsSerializerInputDto } from '@infra/http/serializers/role/syncPermissions.serializer';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -27,6 +29,7 @@ import { FindAllRolesUseCase } from '@application/useCases/role/findAll.usecase'
 import { FindRoleUseCase } from '@application/useCases/role/find.usecase';
 import { UpdateRoleUseCase } from '@application/useCases/role/update.usecase';
 import { DeleteRoleUseCase } from '@application/useCases/role/delete.usecase';
+import { SyncPermissionsUseCase } from '@application/useCases/role/syncPermissions.usecase';
 import { Response } from 'express';
 
 @Controller({ path: 'role', version: '1' })
@@ -39,6 +42,7 @@ export class RoleController {
     private findUseCase: FindRoleUseCase,
     private updateUseCase: UpdateRoleUseCase,
     private deleteUseCase: DeleteRoleUseCase,
+    private syncPermissionsUseCase: SyncPermissionsUseCase,
   ) {}
 
   private context = 'RoleController';
@@ -185,6 +189,39 @@ export class RoleController {
 
       const invalidIdError = errorMessage === 'Invalid id';
       if (invalidIdError) httpCode = HttpStatus.BAD_REQUEST;
+
+      this.loggerService.error('error', errorMessage);
+      throw new HttpException(errorMessage, httpCode);
+    }
+  }
+
+  @Post('sync-permissions')
+  @HttpCode(HttpStatus.OK)
+  async syncPermissions(
+    @Body() input: SyncPermissionsSerializerInputDto,
+    @Res() res: Response,
+  ) {
+    this.loggerService.info(`START ${this.context} syncPermissions`);
+    this.loggerService.debug('input', input);
+    try {
+      await this.syncPermissionsUseCase.run(input);
+
+      this.loggerService.info(`FINISH ${this.context} create`);
+
+      const response = {
+        statusCode: HttpStatus.OK,
+        message: 'Role sync successfully',
+      };
+      return res.json(response);
+    } catch (error) {
+      const errorMessage = error.message;
+      let httpCode = HttpStatus.INTERNAL_SERVER_ERROR;
+
+      const isInvalidRole = errorMessage === 'Invalid role';
+      const isInvalidPermission = errorMessage === 'Invalid permission';
+
+      if (isInvalidRole || isInvalidPermission)
+        httpCode = HttpStatus.BAD_REQUEST;
 
       this.loggerService.error('error', errorMessage);
       throw new HttpException(errorMessage, httpCode);

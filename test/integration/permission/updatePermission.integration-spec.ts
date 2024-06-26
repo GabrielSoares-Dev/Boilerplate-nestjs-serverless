@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from '@infra/modules/app.module';
 import { HttpStatus } from '@nestjs/common';
-import { create } from '@test/helpers/db/factory/permission.factory';
+import { create } from '@test/helpers/db/factories/permission.factory';
 import { faker } from '@faker-js/faker';
 import * as request from 'supertest';
 

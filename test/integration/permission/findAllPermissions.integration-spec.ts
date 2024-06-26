@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '@infra/modules/app.module';
 import { HttpStatus } from '@nestjs/common';
-import { create } from '@test/helpers/db/factory/permission.factory';
+import { create } from '@test/helpers/db/factories/permission.factory';
 import * as request from 'supertest';
 
 const path = '/v1/permission';

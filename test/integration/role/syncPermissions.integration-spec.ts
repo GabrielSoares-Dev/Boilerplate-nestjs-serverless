@@ -2,18 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from '@infra/modules/app.module';
 import { HttpStatus } from '@nestjs/common';
-import { create } from '@test/helpers/db/factories/role.factory';
 import { faker } from '@faker-js/faker';
+import { create as createRole } from '@test/helpers/db/factories/role.factory';
+import { create as createPermission } from '@test/helpers/db/factories/permission.factory';
+
 import * as request from 'supertest';
 
-const path = '/v1/role';
+const path = '/v1/role/sync-permissions';
 
-const input = {
-  name: faker.person.firstName(),
-  description: 'test',
-};
-
-describe('Create Role', () => {
+describe('Sync permissions', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -31,11 +28,18 @@ describe('Create Role', () => {
     await app.init();
   });
 
-  it('Should be create role with success', () => {
-    const expectedStatusCode = HttpStatus.CREATED;
+  it('Should be sync permissions', async () => {
+    const createdRoleBefore = await createRole();
+    const createdPermissionBefore = await createPermission();
+
+    const input = {
+      role: createdRoleBefore.name,
+      permissions: [createdPermissionBefore.name],
+    };
+    const expectedStatusCode = HttpStatus.OK;
     const expectedResponse = {
       statusCode: expectedStatusCode,
-      message: 'Role created successfully',
+      message: 'Role sync successfully',
     };
     return request(app.getHttpServer())
       .post(path)
@@ -44,18 +48,34 @@ describe('Create Role', () => {
       .expect(expectedResponse);
   });
 
-  it('Should be failure when role already exists', async () => {
-    const roleCreatedBefore = await create();
-
+  it('Should be is invalid role', async () => {
+    const input = {
+      role: faker.lorem.word(),
+      permissions: [faker.lorem.word()],
+    };
     const expectedStatusCode = HttpStatus.BAD_REQUEST;
     const expectedResponse = {
       statusCode: expectedStatusCode,
-      message: 'Role already exists',
+      message: 'Invalid role',
     };
+    return request(app.getHttpServer())
+      .post(path)
+      .send(input)
+      .expect(expectedStatusCode)
+      .expect(expectedResponse);
+  });
+
+  it('Should be is invalid role ', async () => {
+    const createdRoleBefore = await createRole();
 
     const input = {
-      name: roleCreatedBefore.name,
-      description: 'test',
+      role: createdRoleBefore.name,
+      permissions: [faker.lorem.word()],
+    };
+    const expectedStatusCode = HttpStatus.BAD_REQUEST;
+    const expectedResponse = {
+      statusCode: expectedStatusCode,
+      message: 'Invalid permission',
     };
     return request(app.getHttpServer())
       .post(path)
@@ -67,7 +87,13 @@ describe('Create Role', () => {
   it('Should be failure without fields', () => {
     const expectedStatusCode = HttpStatus.UNPROCESSABLE_ENTITY;
     const expectedResponse = {
-      message: ['name must be a string', 'name should not be empty'],
+      message: [
+        'role must be a string',
+        'role should not be empty',
+        'permissions must contain at least 1 elements',
+        'each value in permissions must be a string',
+        'permissions must be an array',
+      ],
       error: 'Unprocessable Entity',
       statusCode: expectedStatusCode,
     };

@@ -10,6 +10,7 @@ import { FindRoleByNameRepositoryOutputDto } from '@application/dtos/repositorie
 import { FindAllRolesRepositoryOutputDto } from '@application/dtos/repositories/role/findAll.dto';
 import { FindRoleRepositoryOutputDto } from '@application/dtos/repositories/role/find.dto';
 import { DeleteRoleRepositoryOutputDto } from '@application/dtos/repositories/role/delete.dto';
+import { SyncPermissionsRepositoryInputDto } from '@application/dtos/repositories/role/syncPermissions.dto';
 
 export const ROLE_REPOSITORY_TOKEN = 'ROLE_REPOSITORY_TOKEN';
 
@@ -24,4 +25,5 @@ export interface RoleRepositoryInterface {
   findAll(): Promise<FindAllRolesRepositoryOutputDto>;
   find(id: number): Promise<FindRoleRepositoryOutputDto>;
   delete(id: number): Promise<DeleteRoleRepositoryOutputDto>;
+  syncPermissions(input: SyncPermissionsRepositoryInputDto): Promise<number>;
 }

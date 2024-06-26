@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { User } from '@domain/entities/user.entity';
 import { CreateUserUseCaseInputDto } from '@application/dtos/useCases/user/create.dto';
-import { FindUserByEmailRepositoryOutputDto } from '@application/dtos/repositories/user/findByEmail.dto';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -35,28 +34,20 @@ export class CreateUserUseCase {
     entity.create();
   }
 
-  protected async alreadyExists(
-    email: string,
-  ): Promise<FindUserByEmailRepositoryOutputDto> {
-    return this.userRepository.findByEmail(email);
-  }
-
-  protected async encryptPassword(password: string): Promise<string> {
-    return this.cryptographyService.encrypt(password);
-  }
-
   async run(input: CreateUserUseCaseInputDto): Promise<void> {
     this.loggerService.info('START CreateUserUseCase');
     this.loggerService.debug('input', input);
 
     this.validate(input);
 
-    const alreadyExists = await this.alreadyExists(input.email);
+    const alreadyExists = await this.userRepository.findByEmail(input.email);
     this.loggerService.debug('alreadyExists', alreadyExists);
 
     if (alreadyExists) throw new BusinessException('User already exists');
 
-    const encryptedPassword = await this.encryptPassword(input.password);
+    const encryptedPassword = await this.cryptographyService.encrypt(
+      input.password,
+    );
     this.loggerService.debug('encryptedPassword', encryptedPassword);
 
     const created = await this.userRepository.create({

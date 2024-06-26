@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Role } from '@domain/entities/role.entity';
 import { CreateRoleUseCaseInputDto } from '@application/dtos/useCases/role/create.dto';
-import { FindRoleByNameRepositoryOutputDto } from '@application/dtos/repositories/role/findByName.dto';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -28,19 +27,13 @@ export class CreateRoleUseCase {
     entity.create();
   }
 
-  protected async alreadyExists(
-    name: string,
-  ): Promise<FindRoleByNameRepositoryOutputDto> {
-    return this.roleRepository.findByName(name);
-  }
-
   async run(input: CreateRoleUseCaseInputDto): Promise<void> {
     this.loggerService.info('START CreateRoleUseCase');
     this.loggerService.debug('input', input);
 
     this.validate(input);
 
-    const alreadyExists = await this.alreadyExists(input.name);
+    const alreadyExists = await this.roleRepository.findByName(input.name);
     this.loggerService.debug('alreadyExists', alreadyExists);
 
     if (alreadyExists) throw new BusinessException('Role already exists');

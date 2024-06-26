@@ -13,12 +13,14 @@ import { FindRoleByNameRepositoryOutputDto } from '@application/dtos/repositorie
 import { FindAllRolesRepositoryOutputDto } from '@application/dtos/repositories/role/findAll.dto';
 import { FindRoleRepositoryOutputDto } from '@application/dtos/repositories/role/find.dto';
 import { DeleteRoleRepositoryOutputDto } from '@application/dtos/repositories/role/delete.dto';
+import { SyncPermissionsRepositoryInputDto } from '@application/dtos/repositories/role/syncPermissions.dto';
 
 @Injectable()
 export class RoleRepository implements RoleRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
   private model = this.prisma.role;
+  private pivotModel = this.prisma.roleHasPermissions;
 
   protected defaultFieldsToReturn = {
     id: true,
@@ -86,5 +88,20 @@ export class RoleRepository implements RoleRepositoryInterface {
       where: { id },
       data: { deletedAt: new Date() },
     });
+  }
+
+  async syncPermissions(
+    input: SyncPermissionsRepositoryInputDto,
+  ): Promise<number> {
+    const data = input.permissionIds.map((permissionId) => ({
+      roleId: input.roleId,
+      permissionId,
+    }));
+
+    const records = await this.pivotModel.createMany({
+      data,
+    });
+
+    return records.count;
   }
 }

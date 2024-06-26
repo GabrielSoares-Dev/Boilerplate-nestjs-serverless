@@ -1,5 +1,5 @@
-import { prisma } from '../helpers/db/prisma.client';
-import { cleanDatabase } from '../helpers/db/cleanDatabase';
+import { prisma } from '@test/helpers/db/prisma.client';
+import { cleanDatabase } from '@test/helpers/db/cleanDatabase';
 
 beforeEach(async () => {
   await cleanDatabase();

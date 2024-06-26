@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Permission } from '@domain/entities/permission.entity';
 import { CreatePermissionUseCaseInputDto } from '@application/dtos/useCases/permission/create.dto';
-import { FindPermissionByNameRepositoryOutputDto } from '@application/dtos/repositories/permission/findByName.dto';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -28,19 +27,15 @@ export class CreatePermissionUseCase {
     entity.create();
   }
 
-  protected async alreadyExists(
-    name: string,
-  ): Promise<FindPermissionByNameRepositoryOutputDto> {
-    return this.permissionRepository.findByName(name);
-  }
-
   async run(input: CreatePermissionUseCaseInputDto): Promise<void> {
     this.loggerService.info('START CreatePermissionUseCase');
     this.loggerService.debug('input', input);
 
     this.validate(input);
 
-    const alreadyExists = await this.alreadyExists(input.name);
+    const alreadyExists = await this.permissionRepository.findByName(
+      input.name,
+    );
     this.loggerService.debug('alreadyExists', alreadyExists);
 
     if (alreadyExists) throw new BusinessException('Permission already exists');
