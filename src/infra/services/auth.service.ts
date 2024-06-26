@@ -7,16 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthService implements AuthServiceInterface {
   constructor(private readonly jwtService: JwtService) {}
 
-  private readonly secret = process.env.JWT_SECRET;
-
-  private readonly expiresIn = process.env.TOKEN_EXPIRES_IN;
-
   async generateToken(input: GenerateTokenServiceInputDto): Promise<string> {
-    const options = {
-      secret: this.secret,
-      expiresIn: this.expiresIn,
-    };
-
-    return this.jwtService.signAsync(input, options);
+    return this.jwtService.signAsync(input);
   }
 }

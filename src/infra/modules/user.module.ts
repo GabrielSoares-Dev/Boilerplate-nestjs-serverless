@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
+import { RoleModule } from '@infra/modules/role.module';
+import { CryptographyModule } from '@infra/modules/cryptography.module';
 import { CreateUserUseCase } from '@application/useCases/user/create.usecase';
 import { USER_REPOSITORY_TOKEN } from '@application/repositories/user.repository';
-import { ROLE_REPOSITORY_TOKEN } from '@application/repositories/role.repository';
-import { CRYPTOGRAPHY_SERVICE_TOKEN } from '@application/services/cryptography.service';
 import { UserController } from '@infra/http/controllers/user.controller';
 import { UserRepository } from '@infra/repositories/user.repository';
-import { RoleRepository } from '@infra/repositories/role.repository';
-import { CryptographyService } from '@infra/services/cryptography.service';
 
 @Module({
+  imports: [RoleModule, CryptographyModule],
   controllers: [UserController],
   providers: [
     CreateUserUseCase,
@@ -16,14 +15,7 @@ import { CryptographyService } from '@infra/services/cryptography.service';
       provide: USER_REPOSITORY_TOKEN,
       useClass: UserRepository,
     },
-    {
-      provide: ROLE_REPOSITORY_TOKEN,
-      useClass: RoleRepository,
-    },
-    {
-      provide: CRYPTOGRAPHY_SERVICE_TOKEN,
-      useClass: CryptographyService,
-    },
   ],
+  exports: [USER_REPOSITORY_TOKEN],
 })
 export class UserModule {}

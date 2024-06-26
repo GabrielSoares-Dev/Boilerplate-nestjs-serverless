@@ -12,13 +12,13 @@ const fieldsToReturn = {
   updatedAt: true,
 };
 
-export const create = async (roleId: number) => {
+export const create = async (roleId: number, password?: string) => {
   return model.create({
     data: {
       id: faker.number.int({ max: 100 }),
       name: faker.person.firstName(),
       email: faker.internet.email(),
-      password: faker.internet.password(),
+      password: password ?? faker.internet.password(),
       phoneNumber: faker.phone.number(),
       roleId,
     },

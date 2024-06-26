@@ -35,12 +35,36 @@ export class UserRepository implements UserRepositoryInterface {
 
   async findByEmail(
     email: string,
-  ): Promise<FindUserByEmailRepositoryOutputDto> {
-    return this.model.findFirst({
+  ): Promise<FindUserByEmailRepositoryOutputDto | null> {
+    const user = await this.model.findFirst({
       where: {
         email,
       },
-      select: this.defaultFieldsToReturn,
+      select: {
+        ...this.defaultFieldsToReturn,
+        role: {
+          select: {
+            name: true,
+            roleHasPermissions: {
+              select: { permission: { select: { name: true } } },
+            },
+          },
+        },
+      },
     });
+
+    if (!user) return null;
+
+    const role = user.role.name;
+
+    const permissions = user.role.roleHasPermissions.map(
+      (roleHasPermission) => roleHasPermission.permission.name,
+    );
+
+    return {
+      ...user,
+      role,
+      permissions,
+    };
   }
 }

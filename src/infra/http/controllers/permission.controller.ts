@@ -34,14 +34,14 @@ export class PermissionController {
   constructor(
     @Inject(LOGGER_SERVICE_TOKEN)
     private readonly loggerService: LoggerServiceInterface,
-    private createUseCase: CreatePermissionUseCase,
-    private findAllUseCase: FindAllPermissionsUseCase,
-    private findUseCase: FindPermissionUseCase,
-    private updateUseCase: UpdatePermissionUseCase,
-    private deleteUseCase: DeletePermissionUseCase,
+    private readonly createUseCase: CreatePermissionUseCase,
+    private readonly findAllUseCase: FindAllPermissionsUseCase,
+    private readonly findUseCase: FindPermissionUseCase,
+    private readonly updateUseCase: UpdatePermissionUseCase,
+    private readonly deleteUseCase: DeletePermissionUseCase,
   ) {}
 
-  private context = 'PermissionController';
+  private readonly context = 'PermissionController';
 
   @Post()
   async create(

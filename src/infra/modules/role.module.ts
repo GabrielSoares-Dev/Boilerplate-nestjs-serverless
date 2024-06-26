@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RoleController } from '@infra/http/controllers/role.controller';
+import { PermissionModule } from '@infra/modules/permission.module';
 import { CreateRoleUseCase } from '@application/useCases/role/create.usecase';
 import { FindAllRolesUseCase } from '@application/useCases/role/findAll.usecase';
 import { FindRoleUseCase } from '@application/useCases/role/find.usecase';
@@ -9,10 +10,9 @@ import { SyncPermissionsUseCase } from '@application/useCases/role/syncPermissio
 import { UnsyncPermissionsUseCase } from '@application/useCases/role/unsyncPermissions.usecase';
 import { ROLE_REPOSITORY_TOKEN } from '@application/repositories/role.repository';
 import { RoleRepository } from '@infra/repositories/role.repository';
-import { PERMISSION_REPOSITORY_TOKEN } from '@application/repositories/permission.repository';
-import { PermissionRepository } from '@infra/repositories/permission.repository';
 
 @Module({
+  imports: [PermissionModule],
   controllers: [RoleController],
   providers: [
     CreateRoleUseCase,
@@ -26,10 +26,7 @@ import { PermissionRepository } from '@infra/repositories/permission.repository'
       provide: ROLE_REPOSITORY_TOKEN,
       useClass: RoleRepository,
     },
-    {
-      provide: PERMISSION_REPOSITORY_TOKEN,
-      useClass: PermissionRepository,
-    },
   ],
+  exports: [ROLE_REPOSITORY_TOKEN],
 })
 export class RoleModule {}

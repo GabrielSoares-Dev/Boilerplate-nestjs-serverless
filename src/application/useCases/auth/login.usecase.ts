@@ -67,6 +67,8 @@ export class LoginUseCase {
       name: input.name,
       email: input.email,
       phoneNumber: input.phoneNumber,
+      role: input.role,
+      permissions: input.permissions,
     };
 
     return this.authService.generateToken(payload);

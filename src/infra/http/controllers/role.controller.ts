@@ -39,16 +39,16 @@ export class RoleController {
   constructor(
     @Inject(LOGGER_SERVICE_TOKEN)
     private readonly loggerService: LoggerServiceInterface,
-    private createUseCase: CreateRoleUseCase,
-    private findAllUseCase: FindAllRolesUseCase,
-    private findUseCase: FindRoleUseCase,
-    private updateUseCase: UpdateRoleUseCase,
-    private deleteUseCase: DeleteRoleUseCase,
-    private syncPermissionsUseCase: SyncPermissionsUseCase,
-    private unsyncPermissionsUseCase: UnsyncPermissionsUseCase,
+    private readonly createUseCase: CreateRoleUseCase,
+    private readonly findAllUseCase: FindAllRolesUseCase,
+    private readonly findUseCase: FindRoleUseCase,
+    private readonly updateUseCase: UpdateRoleUseCase,
+    private readonly deleteUseCase: DeleteRoleUseCase,
+    private readonly syncPermissionsUseCase: SyncPermissionsUseCase,
+    private readonly unsyncPermissionsUseCase: UnsyncPermissionsUseCase,
   ) {}
 
-  private context = 'RoleController';
+  private readonly context = 'RoleController';
 
   @Post()
   async create(

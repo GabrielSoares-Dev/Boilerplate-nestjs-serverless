@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoginUseCase } from '@application/useCases/auth/login.usecase';
+import { Role } from '@domain/enums/role.enum';
 import {
   CRYPTOGRAPHY_SERVICE_TOKEN,
   CryptographyServiceInterface,
@@ -27,6 +28,8 @@ const mockFindUserByEmailOutput = {
   password: '$2b$10$QTwuafopwnOX1K/XkbqwGe393FnJmeTim3gPocZ0wXPngfD/F1s0y',
   createdAt: new Date(),
   updatedAt: new Date(),
+  role: Role.ADMIN,
+  permissions: ['test'],
 };
 
 describe('LoginUseCase', () => {
@@ -102,6 +105,8 @@ describe('LoginUseCase', () => {
       name: 'test',
       email: 'test@gmail.com',
       phoneNumber: '11991742156',
+      role: Role.ADMIN,
+      permissions: ['test'],
     };
 
     expect(generateTokenSpyOn).toHaveBeenCalledWith(expectedInputGenerateToken);

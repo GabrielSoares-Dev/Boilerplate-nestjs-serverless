@@ -20,10 +20,10 @@ export class UserController {
   constructor(
     @Inject(LOGGER_SERVICE_TOKEN)
     private readonly loggerService: LoggerServiceInterface,
-    private createUseCase: CreateUserUseCase,
+    private readonly createUseCase: CreateUserUseCase,
   ) {}
 
-  private context = 'UserController';
+  private readonly context = 'UserController';
 
   @Post()
   async create(

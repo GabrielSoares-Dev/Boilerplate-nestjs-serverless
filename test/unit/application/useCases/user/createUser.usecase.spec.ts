@@ -114,6 +114,8 @@ describe('CreateUserUseCase', () => {
       password: 'test',
       createdAt: new Date(),
       updatedAt: new Date(),
+      role: 'test',
+      permissions: ['test'],
     };
 
     jest

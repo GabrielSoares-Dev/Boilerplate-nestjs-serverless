@@ -21,5 +21,6 @@ import { PermissionRepository } from '@infra/repositories/permission.repository'
       useClass: PermissionRepository,
     },
   ],
+  exports: [PERMISSION_REPOSITORY_TOKEN],
 })
 export class PermissionModule {}
