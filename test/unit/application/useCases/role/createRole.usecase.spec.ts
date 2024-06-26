@@ -35,21 +35,22 @@ describe('CreateRoleUseCase', () => {
   });
 
   it('Should be create role', async () => {
+    const findByNameSpyOn = jest.spyOn(roleRepository, 'findByName');
+
     const createSpyOn = jest.spyOn(roleRepository, 'create');
 
     await useCase.run(input);
+
+    expect(findByNameSpyOn).toHaveBeenCalledWith('test');
 
     const expectedInputCreate = {
       name: 'test',
       description: 'test',
     };
-
     expect(createSpyOn).toHaveBeenCalledWith(expectedInputCreate);
   });
 
   it('Should be failure when role already exists', async () => {
-    const createSpyOn = jest.spyOn(roleRepository, 'create');
-
     const mockFindByNameOutput = {
       id: 1,
       name: 'test',
@@ -57,13 +58,14 @@ describe('CreateRoleUseCase', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-
-    jest
+    const findByNameSpyOn = jest
       .spyOn(roleRepository, 'findByName')
       .mockResolvedValue(mockFindByNameOutput);
+    const createSpyOn = jest.spyOn(roleRepository, 'create');
 
     await expect(useCase.run(input)).rejects.toThrow('Role already exists');
 
+    expect(findByNameSpyOn).toHaveBeenCalledWith('test');
     expect(createSpyOn).not.toHaveBeenCalled();
   });
 });

@@ -43,20 +43,28 @@ describe('DeleteRoleUseCase', () => {
   });
 
   it('Should be delete role', async () => {
+    const findSpyOn = jest.spyOn(roleRepository, 'find');
     const deleteSpyOn = jest.spyOn(roleRepository, 'delete');
+
     await useCase.run(input);
 
-    const expectedInputDelete = 1;
+    const expectedInputFind = 1;
+    expect(findSpyOn).toHaveBeenCalledWith(expectedInputFind);
 
+    const expectedInputDelete = 1;
     expect(deleteSpyOn).toHaveBeenCalledWith(expectedInputDelete);
   });
 
   it('Should be is invalid id', async () => {
+    const findSpyOn = jest
+      .spyOn(roleRepository, 'find')
+      .mockResolvedValue(null);
     const deleteSpyOn = jest.spyOn(roleRepository, 'delete');
-    jest.spyOn(roleRepository, 'find').mockResolvedValue(null);
 
     await expect(useCase.run(input)).rejects.toThrow('Invalid id');
 
+    const expectedInputFind = 1;
+    expect(findSpyOn).toHaveBeenCalledWith(expectedInputFind);
     expect(deleteSpyOn).not.toHaveBeenCalled();
   });
 });

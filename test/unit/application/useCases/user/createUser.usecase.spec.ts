@@ -9,7 +9,10 @@ import {
   USER_REPOSITORY_TOKEN,
   UserRepositoryInterface,
 } from '@application/repositories/user.repository';
-import { ROLE_REPOSITORY_TOKEN } from '@application/repositories/role.repository';
+import {
+  ROLE_REPOSITORY_TOKEN,
+  RoleRepositoryInterface,
+} from '@application/repositories/role.repository';
 import { loggerMock } from '@test/helpers/mocks/logger.mock';
 
 const input = {
@@ -30,6 +33,7 @@ const mockFindByNameOutput = {
 describe('CreateUserUseCase', () => {
   let useCase: CreateUserUseCase;
   let userRepository: UserRepositoryInterface;
+  let roleRepository: RoleRepositoryInterface;
   let cryptographyService: CryptographyServiceInterface;
 
   beforeEach(async () => {
@@ -65,19 +69,25 @@ describe('CreateUserUseCase', () => {
 
     useCase = module.get<CreateUserUseCase>(CreateUserUseCase);
     userRepository = module.get<UserRepositoryInterface>(USER_REPOSITORY_TOKEN);
+    roleRepository = module.get<RoleRepositoryInterface>(ROLE_REPOSITORY_TOKEN);
     cryptographyService = module.get<CryptographyServiceInterface>(
       CRYPTOGRAPHY_SERVICE_TOKEN,
     );
   });
 
   it('Should be create user', async () => {
+    const findRoleByNameSpyOn = jest.spyOn(roleRepository, 'findByName');
     const createSpyOn = jest.spyOn(userRepository, 'create');
     const encryptSpyOn = jest.spyOn(cryptographyService, 'encrypt');
 
     await useCase.run(input);
 
-    const expectedInputEncrypt = 'Test@2312';
+    const expectedInputFindRoleByName = Role.ADMIN;
+    expect(findRoleByNameSpyOn).toHaveBeenCalledWith(
+      expectedInputFindRoleByName,
+    );
 
+    const expectedInputEncrypt = 'Test@2312';
     expect(encryptSpyOn).toHaveBeenCalledWith(expectedInputEncrypt);
 
     const expectedInputCreate = {
@@ -92,6 +102,7 @@ describe('CreateUserUseCase', () => {
   });
 
   it('Should be failure when user already exists', async () => {
+    const findRoleByNameSpyOn = jest.spyOn(roleRepository, 'findByName');
     const createSpyOn = jest.spyOn(userRepository, 'create');
     const encryptSpyOn = jest.spyOn(cryptographyService, 'encrypt');
 
@@ -100,6 +111,7 @@ describe('CreateUserUseCase', () => {
       name: 'test',
       email: 'test@gmail.com',
       phoneNumber: '11991742156',
+      password: 'test',
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -111,6 +123,7 @@ describe('CreateUserUseCase', () => {
     await expect(useCase.run(input)).rejects.toThrow('User already exists');
 
     expect(createSpyOn).not.toHaveBeenCalled();
+    expect(findRoleByNameSpyOn).not.toHaveBeenCalled();
     expect(encryptSpyOn).not.toHaveBeenCalled();
   });
 });

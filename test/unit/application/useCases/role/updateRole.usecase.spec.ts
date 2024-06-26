@@ -45,24 +45,31 @@ describe('UpdateRoleUseCase', () => {
   });
 
   it('Should be update role', async () => {
+    const findSpyOn = jest.spyOn(roleRepository, 'find');
     const updateSpyOn = jest.spyOn(roleRepository, 'update');
     await useCase.run(input);
+
+    const expectedInputFind = 1;
+    expect(findSpyOn).toHaveBeenCalledWith(expectedInputFind);
 
     const expectedInputUpdate = {
       id: 1,
       name: 'test',
       description: 'test',
     };
-
     expect(updateSpyOn).toHaveBeenCalledWith(expectedInputUpdate);
   });
 
   it('Should be is invalid id', async () => {
+    const findSpyOn = jest
+      .spyOn(roleRepository, 'find')
+      .mockResolvedValue(null);
     const updateSpyOn = jest.spyOn(roleRepository, 'update');
-    jest.spyOn(roleRepository, 'find').mockResolvedValue(null);
 
     await expect(useCase.run(input)).rejects.toThrow('Invalid id');
 
+    const expectedInputFind = 1;
+    expect(findSpyOn).toHaveBeenCalledWith(expectedInputFind);
     expect(updateSpyOn).not.toHaveBeenCalled();
   });
 });

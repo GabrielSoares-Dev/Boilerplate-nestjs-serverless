@@ -44,6 +44,7 @@ describe('FindPermissionUseCase', () => {
   });
 
   it('Should be find permission', async () => {
+    const findSpyOn = jest.spyOn(permissionRepository, 'find');
     const output = await useCase.run(input);
 
     const expectedOutput = {
@@ -55,11 +56,19 @@ describe('FindPermissionUseCase', () => {
     };
 
     expect(output).toEqual(expectedOutput);
+
+    const expectedInputFind = 1;
+    expect(findSpyOn).toHaveBeenCalledWith(expectedInputFind);
   });
 
   it('Should be is invalid id', async () => {
-    jest.spyOn(permissionRepository, 'find').mockResolvedValue(null);
+    const findSpyOn = jest
+      .spyOn(permissionRepository, 'find')
+      .mockResolvedValue(null);
 
     await expect(useCase.run(input)).rejects.toThrow('Invalid id');
+
+    const expectedInputFind = 1;
+    expect(findSpyOn).toHaveBeenCalledWith(expectedInputFind);
   });
 });

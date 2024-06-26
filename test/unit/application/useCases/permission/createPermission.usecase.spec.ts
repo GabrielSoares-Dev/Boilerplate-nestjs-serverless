@@ -38,8 +38,11 @@ describe('CreatePermissionUseCase', () => {
 
   it('Should be create permission', async () => {
     const createSpyOn = jest.spyOn(permissionRepository, 'create');
+    const findByNameSpyOn = jest.spyOn(permissionRepository, 'findByName');
 
     await useCase.run(input);
+
+    expect(findByNameSpyOn).toHaveBeenCalledWith('test');
 
     const expectedInputCreate = {
       name: 'test',
@@ -50,8 +53,6 @@ describe('CreatePermissionUseCase', () => {
   });
 
   it('Should be failure when permission already exists', async () => {
-    const createSpyOn = jest.spyOn(permissionRepository, 'create');
-
     const mockFindByNameOutput = {
       id: 1,
       name: 'test',
@@ -60,13 +61,16 @@ describe('CreatePermissionUseCase', () => {
       updatedAt: new Date(),
     };
 
-    jest
+    const findByNameSpyOn = jest
       .spyOn(permissionRepository, 'findByName')
       .mockResolvedValue(mockFindByNameOutput);
+    const createSpyOn = jest.spyOn(permissionRepository, 'create');
 
     await expect(useCase.run(input)).rejects.toThrow(
       'Permission already exists',
     );
+
+    expect(findByNameSpyOn).toHaveBeenCalledWith('test');
 
     expect(createSpyOn).not.toHaveBeenCalled();
   });

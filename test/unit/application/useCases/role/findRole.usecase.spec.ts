@@ -42,6 +42,7 @@ describe('FindRoleUseCase', () => {
   });
 
   it('Should be find role', async () => {
+    const findSpyOn = jest.spyOn(roleRepository, 'find');
     const output = await useCase.run(input);
 
     const expectedOutput = {
@@ -53,11 +54,18 @@ describe('FindRoleUseCase', () => {
     };
 
     expect(output).toEqual(expectedOutput);
+
+    const expectedInputFind = 1;
+    expect(findSpyOn).toHaveBeenCalledWith(expectedInputFind);
   });
 
   it('Should be is invalid id', async () => {
-    jest.spyOn(roleRepository, 'find').mockResolvedValue(null);
+    const findSpyOn = jest
+      .spyOn(roleRepository, 'find')
+      .mockResolvedValue(null);
 
     await expect(useCase.run(input)).rejects.toThrow('Invalid id');
+    const expectedInputFind = 1;
+    expect(findSpyOn).toHaveBeenCalledWith(expectedInputFind);
   });
 });

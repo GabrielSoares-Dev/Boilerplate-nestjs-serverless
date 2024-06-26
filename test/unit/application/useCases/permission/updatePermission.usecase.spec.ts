@@ -47,24 +47,32 @@ describe('UpdatePermissionUseCase', () => {
   });
 
   it('Should be update permission', async () => {
+    const findSpyOn = jest.spyOn(permissionRepository, 'find');
     const updateSpyOn = jest.spyOn(permissionRepository, 'update');
+
     await useCase.run(input);
+
+    const expectedInputFind = 1;
+    expect(findSpyOn).toHaveBeenCalledWith(expectedInputFind);
 
     const expectedInputUpdate = {
       id: 1,
       name: 'test',
       description: 'test',
     };
-
     expect(updateSpyOn).toHaveBeenCalledWith(expectedInputUpdate);
   });
 
   it('Should be is invalid id', async () => {
+    const findSpyOn = jest
+      .spyOn(permissionRepository, 'find')
+      .mockResolvedValue(null);
     const updateSpyOn = jest.spyOn(permissionRepository, 'update');
-    jest.spyOn(permissionRepository, 'find').mockResolvedValue(null);
 
     await expect(useCase.run(input)).rejects.toThrow('Invalid id');
 
+    const expectedInputFind = 1;
+    expect(findSpyOn).toHaveBeenCalledWith(expectedInputFind);
     expect(updateSpyOn).not.toHaveBeenCalled();
   });
 });
