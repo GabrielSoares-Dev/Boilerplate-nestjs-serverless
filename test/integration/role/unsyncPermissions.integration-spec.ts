@@ -7,9 +7,9 @@ import { create as createRole } from '@test/helpers/db/factories/role.factory';
 import { create as createPermission } from '@test/helpers/db/factories/permission.factory';
 import * as request from 'supertest';
 
-const path = '/v1/role/sync-permissions';
+const path = '/v1/role/unsync-permissions';
 
-describe('Sync permissions', () => {
+describe('Unsync permissions', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -27,7 +27,7 @@ describe('Sync permissions', () => {
     await app.init();
   });
 
-  it('Should be sync permissions', async () => {
+  it('Should be unsync permissions', async () => {
     const createdRoleBefore = await createRole();
     const createdPermissionBefore = await createPermission();
 
@@ -38,7 +38,7 @@ describe('Sync permissions', () => {
     const expectedStatusCode = HttpStatus.OK;
     const expectedResponse = {
       statusCode: expectedStatusCode,
-      message: 'Role sync successfully',
+      message: 'Role unsync successfully',
     };
     return request(app.getHttpServer())
       .post(path)

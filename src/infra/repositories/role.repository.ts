@@ -14,6 +14,7 @@ import { FindAllRolesRepositoryOutputDto } from '@application/dtos/repositories/
 import { FindRoleRepositoryOutputDto } from '@application/dtos/repositories/role/find.dto';
 import { DeleteRoleRepositoryOutputDto } from '@application/dtos/repositories/role/delete.dto';
 import { SyncPermissionsRepositoryInputDto } from '@application/dtos/repositories/role/syncPermissions.dto';
+import { UnsyncPermissionsRepositoryInputDto } from '@application/dtos/repositories/role/unsyncPermissions.dto';
 
 @Injectable()
 export class RoleRepository implements RoleRepositoryInterface {
@@ -103,5 +104,18 @@ export class RoleRepository implements RoleRepositoryInterface {
     });
 
     return records.count;
+  }
+
+  async unsyncPermissions(
+    input: UnsyncPermissionsRepositoryInputDto,
+  ): Promise<number> {
+    const recordsDeleted = await this.pivotModel.deleteMany({
+      where: {
+        roleId: input.roleId,
+        permissionId: { in: input.permissionIds },
+      },
+    });
+
+    return recordsDeleted.count;
   }
 }
