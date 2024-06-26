@@ -3,6 +3,7 @@ export interface CreateUserRepositoryInputDto {
   email: string;
   phoneNumber: string;
   password: string;
+  roleId: number;
 }
 
 export interface CreateUserRepositoryOutputDto {
@@ -10,6 +11,7 @@ export interface CreateUserRepositoryOutputDto {
   name: string;
   email: string;
   phoneNumber: string;
+  roleId: number;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -13,33 +13,36 @@ model User {
   email       String    @unique
   password    String
   phoneNumber String    @map("phone_number") @db.VarChar(20)
+  roleId      Int       @map("role_id")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
+  role        Role?     @relation(fields: [roleId], references: [id])
 
   @@map("users")
 }
 
 model Permission {
-  id          Int                  @id @default(autoincrement())
-  name        String               @unique
-  description String?
-  createdAt   DateTime             @default(now()) @map("created_at")
-  updatedAt   DateTime?            @updatedAt @map("updated_at")
-  deletedAt   DateTime?            @map("deleted_at")
+  id                 Int                  @id @default(autoincrement())
+  name               String               @unique
+  description        String?
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime?            @updatedAt @map("updated_at")
+  deletedAt          DateTime?            @map("deleted_at")
   roleHasPermissions RoleHasPermissions[]
-                                  
+
   @@map("permissions")
 }
 
 model Role {
-  id          Int                  @id @default(autoincrement())
-  name        String               @unique
-  description String?
-  createdAt   DateTime             @default(now()) @map("created_at")
-  updatedAt   DateTime?            @updatedAt @map("updated_at")
-  deletedAt   DateTime?            @map("deleted_at")
+  id                 Int                  @id @default(autoincrement())
+  name               String               @unique
+  description        String?
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime?            @updatedAt @map("updated_at")
+  deletedAt          DateTime?            @map("deleted_at")
   roleHasPermissions RoleHasPermissions[]
+  User               User[]
 
   @@map("roles")
 }

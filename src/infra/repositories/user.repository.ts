@@ -18,6 +18,7 @@ export class UserRepository implements UserRepositoryInterface {
     name: true,
     email: true,
     phoneNumber: true,
+    roleId: true,
     createdAt: true,
     updatedAt: true,
   };

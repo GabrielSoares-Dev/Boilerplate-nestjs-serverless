@@ -2,7 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from '@infra/modules/app.module';
 import { HttpStatus } from '@nestjs/common';
-import { create } from '@test/helpers/db/factories/user.factory';
+import { Role } from '@domain/enums/role.enum';
+import { create as createUser } from '@test/helpers/db/factories/user.factory';
+import { create as createRole } from '@test/helpers/db/factories/role.factory';
 import { faker } from '@faker-js/faker';
 import * as request from 'supertest';
 
@@ -33,7 +35,8 @@ describe('Create User', () => {
     await app.init();
   });
 
-  it('Should be create user with success', () => {
+  it('Should be create user with success', async () => {
+    await createRole(Role.ADMIN);
     const expectedStatusCode = HttpStatus.CREATED;
     const expectedResponse = {
       statusCode: expectedStatusCode,
@@ -47,7 +50,8 @@ describe('Create User', () => {
   });
 
   it('Should be failure when user already exists', async () => {
-    const userCreatedBefore = await create();
+    const adminRole = await createRole(Role.ADMIN);
+    const userCreatedBefore = await createUser(adminRole.id);
 
     const expectedStatusCode = HttpStatus.BAD_REQUEST;
     const expectedResponse = {

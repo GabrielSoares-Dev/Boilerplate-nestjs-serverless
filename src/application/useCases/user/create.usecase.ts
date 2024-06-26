@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { User } from '@domain/entities/user.entity';
 import { CreateUserUseCaseInputDto } from '@application/dtos/useCases/user/create.dto';
+import { Role } from '@domain/enums/role.enum';
 import {
   LOGGER_SERVICE_TOKEN,
   LoggerServiceInterface,
@@ -13,6 +14,10 @@ import {
   USER_REPOSITORY_TOKEN,
   UserRepositoryInterface,
 } from '@application/repositories/user.repository';
+import {
+  ROLE_REPOSITORY_TOKEN,
+  RoleRepositoryInterface,
+} from '@application/repositories/role.repository';
 import { BusinessException } from '@application/exceptions/business.exception';
 
 @Injectable()
@@ -26,6 +31,9 @@ export class CreateUserUseCase {
 
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly userRepository: UserRepositoryInterface,
+
+    @Inject(ROLE_REPOSITORY_TOKEN)
+    private readonly roleRepository: RoleRepositoryInterface,
   ) {}
 
   protected validate(input: CreateUserUseCaseInputDto): void {
@@ -50,9 +58,14 @@ export class CreateUserUseCase {
     );
     this.loggerService.debug('encryptedPassword', encryptedPassword);
 
+    const adminRole = await this.roleRepository.findByName(Role.ADMIN);
+    this.loggerService.debug('adminRole', adminRole);
+
+    const roleId = adminRole.id;
     const created = await this.userRepository.create({
       ...input,
       password: encryptedPassword,
+      roleId,
     });
     this.loggerService.debug('created', created);
 

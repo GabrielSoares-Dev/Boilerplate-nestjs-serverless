@@ -12,7 +12,7 @@ const fieldsToReturn = {
   updatedAt: true,
 };
 
-export const create = async () => {
+export const create = async (roleId: number) => {
   return model.create({
     data: {
       id: faker.number.int({ max: 100 }),
@@ -20,6 +20,7 @@ export const create = async () => {
       email: faker.internet.email(),
       password: faker.internet.password(),
       phoneNumber: faker.phone.number(),
+      roleId,
     },
     select: fieldsToReturn,
   });

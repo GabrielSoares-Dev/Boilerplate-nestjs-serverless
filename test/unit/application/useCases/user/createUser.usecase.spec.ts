@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserUseCase } from '@application/useCases/user/create.usecase';
+import { Role } from '@domain/enums/role.enum';
 import {
   CRYPTOGRAPHY_SERVICE_TOKEN,
   CryptographyServiceInterface,
@@ -8,6 +9,7 @@ import {
   USER_REPOSITORY_TOKEN,
   UserRepositoryInterface,
 } from '@application/repositories/user.repository';
+import { ROLE_REPOSITORY_TOKEN } from '@application/repositories/role.repository';
 import { loggerMock } from '@test/helpers/mocks/logger.mock';
 
 const input = {
@@ -15,6 +17,14 @@ const input = {
   email: 'test@gmail.com',
   password: 'Test@2312',
   phoneNumber: '11991742156',
+};
+
+const mockFindByNameOutput = {
+  id: 1,
+  name: Role.ADMIN,
+  description: 'test',
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
 
 describe('CreateUserUseCase', () => {
@@ -31,6 +41,12 @@ describe('CreateUserUseCase', () => {
           useValue: {
             create: jest.fn(),
             findByEmail: jest.fn().mockResolvedValue(null),
+          },
+        },
+        {
+          provide: ROLE_REPOSITORY_TOKEN,
+          useValue: {
+            findByName: jest.fn().mockResolvedValue(mockFindByNameOutput),
           },
         },
         {
@@ -69,6 +85,7 @@ describe('CreateUserUseCase', () => {
       name: 'test',
       password: '$2b$10$QTwuafopwnOX1K/XkbqwGe393FnJmeTim3gPocZ0wXPngfD/F1s0y',
       phoneNumber: '11991742156',
+      roleId: 1,
     };
 
     expect(createSpyOn).toHaveBeenCalledWith(expectedInputCreate);

@@ -11,11 +11,11 @@ const fieldsToReturn = {
   updatedAt: true,
 };
 
-export const create = async () => {
+export const create = async (name?: string) => {
   return model.create({
     data: {
       id: faker.number.int({ max: 100 }),
-      name: faker.lorem.word(),
+      name: name ?? faker.lorem.word(),
       description: faker.lorem.word(),
     },
     select: fieldsToReturn,
