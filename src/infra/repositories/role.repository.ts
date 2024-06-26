@@ -20,10 +20,10 @@ import { UnsyncPermissionsRepositoryInputDto } from '@application/dtos/repositor
 export class RoleRepository implements RoleRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  private model = this.prisma.role;
-  private pivotModel = this.prisma.roleHasPermissions;
+  private readonly model = this.prisma.role;
+  private readonly pivotModel = this.prisma.roleHasPermissions;
 
-  protected defaultFieldsToReturn = {
+  protected readonly defaultFieldsToReturn = {
     id: true,
     name: true,
     description: true,
@@ -31,7 +31,7 @@ export class RoleRepository implements RoleRepositoryInterface {
     updatedAt: true,
   };
 
-  protected softDeleteClause = {
+  protected readonly softDeleteClause = {
     deletedAt: null,
   };
 

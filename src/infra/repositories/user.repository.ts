@@ -11,14 +11,15 @@ import { FindUserByEmailRepositoryOutputDto } from '@application/dtos/repositori
 export class UserRepository implements UserRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  private model = this.prisma.user;
+  private readonly model = this.prisma.user;
 
-  protected defaultFieldsToReturn = {
+  protected readonly defaultFieldsToReturn = {
     id: true,
     name: true,
     email: true,
     phoneNumber: true,
     roleId: true,
+    password: true,
     createdAt: true,
     updatedAt: true,
   };

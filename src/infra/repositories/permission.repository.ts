@@ -18,9 +18,9 @@ import { DeletePermissionRepositoryOutputDto } from '@application/dtos/repositor
 export class PermissionRepository implements PermissionRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  private model = this.prisma.permission;
+  private readonly model = this.prisma.permission;
 
-  protected defaultFieldsToReturn = {
+  protected readonly defaultFieldsToReturn = {
     id: true,
     name: true,
     description: true,
@@ -28,7 +28,7 @@ export class PermissionRepository implements PermissionRepositoryInterface {
     updatedAt: true,
   };
 
-  protected softDeleteClause = {
+  protected readonly softDeleteClause = {
     deletedAt: null,
   };
 
