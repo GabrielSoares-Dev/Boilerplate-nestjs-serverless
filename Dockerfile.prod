@@ -37,4 +37,4 @@ COPY --chown=node:node --from=build /app/dist ./dist
 COPY --chown=node:node --from=build /app/prisma ./prisma
 
 
-CMD  npm run start:migrate:prod
+CMD  prisma migrate deploy && node dist/src/main
