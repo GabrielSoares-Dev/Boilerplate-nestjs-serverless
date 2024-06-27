@@ -13,7 +13,7 @@ This boilerplate project is built with NestJS and includes Docker support, Prism
 ### Prerequisites
 - Node.js (>=18.x)
 - Docker and Docker Compose
-- PostgreSQL (or any other Prisma-supported database)
+- MySQL (or any other Prisma-supported database)
 
 ### Installation
 1. Clone the repository:
