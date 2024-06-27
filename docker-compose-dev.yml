@@ -8,7 +8,7 @@ services:
      dockerfile: Dockerfile.dev
     restart: always
     ports:
-      - '3000:3000'
+      - '3005:3005'
     volumes:
       - .:/app
       - node-modules-boilerplate-nestjs-docker-volume:/app/node_modules
