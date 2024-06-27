@@ -5,12 +5,23 @@ import { HttpStatus } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 import { create as createRole } from '@test/helpers/db/factories/role.factory';
 import { create as createPermission } from '@test/helpers/db/factories/permission.factory';
+import { JwtService } from '@nestjs/jwt';
+import { Role } from '@domain/enums/role.enum';
 import * as request from 'supertest';
 
 const path = '/v1/role/unsync-permissions';
-
+const userLogged = {
+  id: 1,
+  name: 'test',
+  email: 'test@gmail.com',
+  phoneNumber: '11991742156',
+  role: Role.ADMIN,
+  permissions: ['test'],
+};
 describe('Unsync permissions', () => {
   let app: INestApplication;
+  let jwtService: JwtService;
+  let token: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -25,6 +36,10 @@ describe('Unsync permissions', () => {
     );
     app.enableVersioning();
     await app.init();
+
+    jwtService = moduleFixture.get<JwtService>(JwtService);
+    const tokenGenerated = await jwtService.signAsync(userLogged);
+    token = `Bearer ${tokenGenerated}`;
   });
 
   it('Should be unsync permissions', async () => {
@@ -43,6 +58,7 @@ describe('Unsync permissions', () => {
     return request(app.getHttpServer())
       .post(path)
       .send(input)
+      .set({ Authorization: token })
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });
@@ -60,6 +76,7 @@ describe('Unsync permissions', () => {
     return request(app.getHttpServer())
       .post(path)
       .send(input)
+      .set({ Authorization: token })
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });
@@ -79,6 +96,7 @@ describe('Unsync permissions', () => {
     return request(app.getHttpServer())
       .post(path)
       .send(input)
+      .set({ Authorization: token })
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });
@@ -94,6 +112,20 @@ describe('Unsync permissions', () => {
         'permissions must be an array',
       ],
       error: 'Unprocessable Entity',
+      statusCode: expectedStatusCode,
+    };
+
+    return request(app.getHttpServer())
+      .post(path)
+      .set({ Authorization: token })
+      .expect(expectedStatusCode)
+      .expect(expectedResponse);
+  });
+
+  it('Should be is unauthorized', () => {
+    const expectedStatusCode = HttpStatus.UNAUTHORIZED;
+    const expectedResponse = {
+      message: 'Unauthorized',
       statusCode: expectedStatusCode,
     };
 

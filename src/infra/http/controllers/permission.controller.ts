@@ -10,7 +10,9 @@ import {
   HttpException,
   Body,
   Param,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@infra/http/guards/auth.guard';
 import { CreatePermissionSerializerInputDto } from '@infra/http/serializers/permission/create.serializer';
 import { FindPermissionSerializerInputDto } from '@infra/http/serializers/permission/find.serializer';
 import {
@@ -30,6 +32,7 @@ import { DeletePermissionUseCase } from '@application/useCases/permission/delete
 import { Response } from 'express';
 
 @Controller({ path: 'permission', version: '1' })
+@UseGuards(AuthGuard)
 export class PermissionController {
   constructor(
     @Inject(LOGGER_SERVICE_TOKEN)

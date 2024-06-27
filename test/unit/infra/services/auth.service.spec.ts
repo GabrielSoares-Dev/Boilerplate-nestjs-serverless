@@ -15,6 +15,7 @@ describe('AuthService', () => {
           provide: JwtService,
           useValue: {
             signAsync: jest.fn().mockResolvedValue('token-test'),
+            verifyAsync: jest.fn().mockResolvedValue({ name: 'user' }),
           },
         },
       ],
@@ -35,6 +36,15 @@ describe('AuthService', () => {
       const output = await service.generateToken(input);
 
       const expectedOutput = 'token-test';
+      expect(output).toEqual(expectedOutput);
+    });
+  });
+  describe('verifyToken', () => {
+    it('Should be verify token', async () => {
+      const input = 'mock-token';
+      const output = await service.verifyToken(input);
+
+      const expectedOutput = { name: 'user' };
       expect(output).toEqual(expectedOutput);
     });
   });

@@ -10,5 +10,7 @@ export interface UserRepositoryInterface {
   create(
     input: CreateUserRepositoryInputDto,
   ): Promise<CreateUserRepositoryOutputDto>;
-  findByEmail(email: string): Promise<FindUserByEmailRepositoryOutputDto>;
+  findByEmail(
+    email: string,
+  ): Promise<FindUserByEmailRepositoryOutputDto | null>;
 }

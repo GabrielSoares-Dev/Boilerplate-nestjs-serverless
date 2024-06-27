@@ -19,7 +19,7 @@ export const create = async (roleId: number, password?: string) => {
       name: faker.person.firstName(),
       email: faker.internet.email(),
       password: password ?? faker.internet.password(),
-      phoneNumber: faker.phone.number(),
+      phoneNumber: '11991742156',
       roleId,
     },
     select: fieldsToReturn,

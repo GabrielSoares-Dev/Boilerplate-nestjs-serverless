@@ -4,6 +4,8 @@ import { AppModule } from '@infra/modules/app.module';
 import { HttpStatus } from '@nestjs/common';
 import { create } from '@test/helpers/db/factories/permission.factory';
 import { faker } from '@faker-js/faker';
+import { JwtService } from '@nestjs/jwt';
+import { Role } from '@domain/enums/role.enum';
 import * as request from 'supertest';
 
 const path = '/v1/permission';
@@ -13,8 +15,19 @@ const input = {
   description: 'test',
 };
 
+const userLogged = {
+  id: 1,
+  name: 'test',
+  email: 'test@gmail.com',
+  phoneNumber: '11991742156',
+  role: Role.ADMIN,
+  permissions: ['test'],
+};
+
 describe('Create Permission', () => {
   let app: INestApplication;
+  let jwtService: JwtService;
+  let token: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -29,6 +42,10 @@ describe('Create Permission', () => {
     );
     app.enableVersioning();
     await app.init();
+
+    jwtService = moduleFixture.get<JwtService>(JwtService);
+    const tokenGenerated = await jwtService.signAsync(userLogged);
+    token = `Bearer ${tokenGenerated}`;
   });
 
   it('Should be create permission with success', () => {
@@ -40,6 +57,7 @@ describe('Create Permission', () => {
     return request(app.getHttpServer())
       .post(path)
       .send(input)
+      .set({ Authorization: token })
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });
@@ -60,6 +78,7 @@ describe('Create Permission', () => {
     return request(app.getHttpServer())
       .post(path)
       .send(input)
+      .set({ Authorization: token })
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });
@@ -69,6 +88,20 @@ describe('Create Permission', () => {
     const expectedResponse = {
       message: ['name must be a string', 'name should not be empty'],
       error: 'Unprocessable Entity',
+      statusCode: expectedStatusCode,
+    };
+
+    return request(app.getHttpServer())
+      .post(path)
+      .set({ Authorization: token })
+      .expect(expectedStatusCode)
+      .expect(expectedResponse);
+  });
+
+  it('Should be is unauthorized', () => {
+    const expectedStatusCode = HttpStatus.UNAUTHORIZED;
+    const expectedResponse = {
+      message: 'Unauthorized',
       statusCode: expectedStatusCode,
     };
 

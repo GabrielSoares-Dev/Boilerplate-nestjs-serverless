@@ -4,12 +4,25 @@ import { AppModule } from '@infra/modules/app.module';
 import { HttpStatus } from '@nestjs/common';
 import { create } from '@test/helpers/db/factories/role.factory';
 import { faker } from '@faker-js/faker';
+import { JwtService } from '@nestjs/jwt';
+import { Role } from '@domain/enums/role.enum';
 import * as request from 'supertest';
 
 const path = '/v1/role';
 
+const userLogged = {
+  id: 1,
+  name: 'test',
+  email: 'test@gmail.com',
+  phoneNumber: '11991742156',
+  role: Role.ADMIN,
+  permissions: ['test'],
+};
+
 describe('Find role', () => {
   let app: INestApplication;
+  let jwtService: JwtService;
+  let token: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -24,6 +37,10 @@ describe('Find role', () => {
     );
     app.enableVersioning();
     await app.init();
+
+    jwtService = moduleFixture.get<JwtService>(JwtService);
+    const tokenGenerated = await jwtService.signAsync(userLogged);
+    token = `Bearer ${tokenGenerated}`;
   });
 
   it('Should be found role with success', async () => {
@@ -43,6 +60,7 @@ describe('Find role', () => {
 
     return request(app.getHttpServer())
       .get(`${path}/${id}`)
+      .set({ Authorization: token })
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });
@@ -57,6 +75,7 @@ describe('Find role', () => {
 
     return request(app.getHttpServer())
       .get(`${path}/${id}`)
+      .set({ Authorization: token })
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });
@@ -70,6 +89,21 @@ describe('Find role', () => {
     };
 
     const id = 'test';
+    return request(app.getHttpServer())
+      .get(`${path}/${id}`)
+      .set({ Authorization: token })
+      .expect(expectedStatusCode)
+      .expect(expectedResponse);
+  });
+
+  it('Should be is unauthorized', () => {
+    const id = faker.number.int({ max: 100 });
+    const expectedStatusCode = HttpStatus.UNAUTHORIZED;
+    const expectedResponse = {
+      message: 'Unauthorized',
+      statusCode: expectedStatusCode,
+    };
+
     return request(app.getHttpServer())
       .get(`${path}/${id}`)
       .expect(expectedStatusCode)

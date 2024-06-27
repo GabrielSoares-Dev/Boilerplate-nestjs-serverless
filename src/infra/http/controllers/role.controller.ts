@@ -11,7 +11,9 @@ import {
   Body,
   Param,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@infra/http/guards/auth.guard';
 import { CreateRoleSerializerInputDto } from '@infra/http/serializers/role/create.serializer';
 import { FindRoleSerializerInputDto } from '@infra/http/serializers/role/find.serializer';
 import {
@@ -35,6 +37,7 @@ import { UnsyncPermissionsUseCase } from '@application/useCases/role/unsyncPermi
 import { Response } from 'express';
 
 @Controller({ path: 'role', version: '1' })
+@UseGuards(AuthGuard)
 export class RoleController {
   constructor(
     @Inject(LOGGER_SERVICE_TOKEN)

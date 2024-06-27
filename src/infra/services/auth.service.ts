@@ -10,4 +10,8 @@ export class AuthService implements AuthServiceInterface {
   async generateToken(input: GenerateTokenServiceInputDto): Promise<string> {
     return this.jwtService.signAsync(input);
   }
+
+  async verifyToken(token: string): Promise<object> {
+    return this.jwtService.verifyAsync(token);
+  }
 }
