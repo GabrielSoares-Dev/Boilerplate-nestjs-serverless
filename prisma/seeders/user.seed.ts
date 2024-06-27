@@ -16,7 +16,7 @@ const admin = async () => {
     name: 'admin',
     email: 'admin@gmail.com',
     phoneNumber: '11942421224',
-    password: await encryptPassword('admin@1234'),
+    password: await encryptPassword('Admin@1234'),
     roleId,
   };
 

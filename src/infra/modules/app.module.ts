@@ -14,6 +14,7 @@ import { PrismaModule } from '@infra/modules/prisma.module';
     }),
     LoggerModule,
     PrismaModule,
+
     AuthModule,
     UserModule,
     PermissionModule,
