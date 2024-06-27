@@ -4,6 +4,7 @@ import { UserModule } from '@infra/modules/user.module';
 import { CryptographyModule } from '@infra/modules/cryptography.module';
 import { LoginUseCase } from '@application/useCases/auth/login.usecase';
 import { CheckAuthenticationUseCase } from '@application/useCases/auth/checkAuthentication.usecase';
+import { CheckPermissionUseCase } from '@application/useCases/auth/checkPermission.usecase';
 import { AUTH_SERVICE_TOKEN } from '@application/services/auth.service';
 import { AuthController } from '@infra/http/controllers/auth.controller';
 import { AuthService } from '@infra/services/auth.service';
@@ -23,11 +24,12 @@ import { AuthService } from '@infra/services/auth.service';
   providers: [
     LoginUseCase,
     CheckAuthenticationUseCase,
+    CheckPermissionUseCase,
     {
       provide: AUTH_SERVICE_TOKEN,
       useClass: AuthService,
     },
   ],
-  exports: [CheckAuthenticationUseCase],
+  exports: [CheckAuthenticationUseCase, CheckPermissionUseCase],
 })
 export class AuthModule {}

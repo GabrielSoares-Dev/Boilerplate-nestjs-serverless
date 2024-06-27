@@ -7,6 +7,7 @@ import { create as createRole } from '@test/helpers/db/factories/role.factory';
 import { create as createPermission } from '@test/helpers/db/factories/permission.factory';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@domain/enums/role.enum';
+import { Permission } from '@domain/enums/permission.enum';
 import * as request from 'supertest';
 
 const path = '/v1/role/unsync-permissions';
@@ -16,7 +17,7 @@ const userLogged = {
   email: 'test@gmail.com',
   phoneNumber: '11991742156',
   role: Role.ADMIN,
-  permissions: ['test'],
+  permissions: [Permission.UNSYNC_ROLE_WITH_PERMISSIONS],
 };
 describe('Unsync permissions', () => {
   let app: INestApplication;
@@ -131,6 +132,31 @@ describe('Unsync permissions', () => {
 
     return request(app.getHttpServer())
       .post(path)
+      .expect(expectedStatusCode)
+      .expect(expectedResponse);
+  });
+
+  it('Should be resource access denied', async () => {
+    const userLogged = {
+      id: 1,
+      name: 'test',
+      email: 'test@gmail.com',
+      phoneNumber: '11991742156',
+      role: Role.ADMIN,
+      permissions: ['test'],
+    };
+
+    const tokenGenerated = await jwtService.signAsync(userLogged);
+    token = `Bearer ${tokenGenerated}`;
+    const expectedStatusCode = HttpStatus.FORBIDDEN;
+    const expectedResponse = {
+      message: 'Access to this resource was denied',
+      statusCode: expectedStatusCode,
+    };
+
+    return request(app.getHttpServer())
+      .post(path)
+      .set({ Authorization: token })
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });

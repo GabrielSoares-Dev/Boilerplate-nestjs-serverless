@@ -14,6 +14,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@infra/http/guards/auth.guard';
+import { PermissionGuard } from '@infra/http/guards/permission.guard';
+import { Permission } from '@infra/decorators/permission.decorator';
 import { CreateRoleSerializerInputDto } from '@infra/http/serializers/role/create.serializer';
 import { FindRoleSerializerInputDto } from '@infra/http/serializers/role/find.serializer';
 import {
@@ -34,6 +36,7 @@ import { UpdateRoleUseCase } from '@application/useCases/role/update.usecase';
 import { DeleteRoleUseCase } from '@application/useCases/role/delete.usecase';
 import { SyncPermissionsUseCase } from '@application/useCases/role/syncPermissions.usecase';
 import { UnsyncPermissionsUseCase } from '@application/useCases/role/unsyncPermissions.usecase';
+import { Permission as PermissionEnum } from '@domain/enums/permission.enum';
 import { Response } from 'express';
 
 @Controller({ path: 'role', version: '1' })
@@ -54,6 +57,8 @@ export class RoleController {
   private readonly context = 'RoleController';
 
   @Post()
+  @Permission(PermissionEnum.CREATE_ROLE)
+  @UseGuards(PermissionGuard)
   async create(
     @Body() input: CreateRoleSerializerInputDto,
     @Res() res: Response,
@@ -83,6 +88,8 @@ export class RoleController {
   }
 
   @Get()
+  @Permission(PermissionEnum.READ_ALL_ROLES)
+  @UseGuards(PermissionGuard)
   async findAll(@Res() res: Response) {
     this.loggerService.info(`START ${this.context} findAll`);
     try {
@@ -107,6 +114,8 @@ export class RoleController {
   }
 
   @Get(':id')
+  @Permission(PermissionEnum.READ_ROLE)
+  @UseGuards(PermissionGuard)
   async findOne(
     @Param() input: FindRoleSerializerInputDto,
     @Res() res: Response,
@@ -138,6 +147,8 @@ export class RoleController {
   }
 
   @Patch(':id')
+  @Permission(PermissionEnum.UPDATE_ROLE)
+  @UseGuards(PermissionGuard)
   async update(
     @Param() params: UpdateRoleSerializerInputParamDto,
     @Body() input: UpdateRoleSerializerInputDto,
@@ -173,6 +184,8 @@ export class RoleController {
   }
 
   @Delete(':id')
+  @Permission(PermissionEnum.DELETE_ROLE)
+  @UseGuards(PermissionGuard)
   async remove(
     @Param() input: DeleteRoleSerializerInputDto,
     @Res() res: Response,
@@ -202,6 +215,8 @@ export class RoleController {
   }
 
   @Post('sync-permissions')
+  @Permission(PermissionEnum.SYNC_ROLE_WITH_PERMISSIONS)
+  @UseGuards(PermissionGuard)
   @HttpCode(HttpStatus.OK)
   async syncPermissions(
     @Body() input: SyncPermissionsSerializerInputDto,
@@ -235,6 +250,8 @@ export class RoleController {
   }
 
   @Post('unsync-permissions')
+  @Permission(PermissionEnum.UNSYNC_ROLE_WITH_PERMISSIONS)
+  @UseGuards(PermissionGuard)
   @HttpCode(HttpStatus.OK)
   async unsyncPermissions(
     @Body() input: UnsyncPermissionsSerializerInputDto,

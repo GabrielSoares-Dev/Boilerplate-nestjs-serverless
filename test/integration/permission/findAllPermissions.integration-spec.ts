@@ -5,6 +5,7 @@ import { HttpStatus } from '@nestjs/common';
 import { create } from '@test/helpers/db/factories/permission.factory';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@domain/enums/role.enum';
+import { Permission } from '@domain/enums/permission.enum';
 import * as request from 'supertest';
 
 const path = '/v1/permission';
@@ -14,7 +15,7 @@ const userLogged = {
   email: 'test@gmail.com',
   phoneNumber: '11991742156',
   role: Role.ADMIN,
-  permissions: ['test'],
+  permissions: [Permission.READ_ALL_PERMISSIONS],
 };
 
 describe('Find all permissions', () => {
@@ -67,7 +68,31 @@ describe('Find all permissions', () => {
 
     return request(app.getHttpServer())
       .get(path)
+      .expect(expectedStatusCode)
+      .expect(expectedResponse);
+  });
 
+  it('Should be resource access denied', async () => {
+    const userLogged = {
+      id: 1,
+      name: 'test',
+      email: 'test@gmail.com',
+      phoneNumber: '11991742156',
+      role: Role.ADMIN,
+      permissions: ['test'],
+    };
+
+    const tokenGenerated = await jwtService.signAsync(userLogged);
+    token = `Bearer ${tokenGenerated}`;
+    const expectedStatusCode = HttpStatus.FORBIDDEN;
+    const expectedResponse = {
+      message: 'Access to this resource was denied',
+      statusCode: expectedStatusCode,
+    };
+
+    return request(app.getHttpServer())
+      .get(path)
+      .set({ Authorization: token })
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });

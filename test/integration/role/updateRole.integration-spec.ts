@@ -6,6 +6,7 @@ import { create } from '@test/helpers/db/factories/role.factory';
 import { faker } from '@faker-js/faker';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@domain/enums/role.enum';
+import { Permission } from '@domain/enums/permission.enum';
 import * as request from 'supertest';
 
 const path = '/v1/role';
@@ -21,7 +22,7 @@ const userLogged = {
   email: 'test@gmail.com',
   phoneNumber: '11991742156',
   role: Role.ADMIN,
-  permissions: ['test'],
+  permissions: [Permission.UPDATE_ROLE],
 };
 
 describe('Update role', () => {
@@ -130,6 +131,32 @@ describe('Update role', () => {
 
     return request(app.getHttpServer())
       .patch(`${path}/${id}`)
+      .expect(expectedStatusCode)
+      .expect(expectedResponse);
+  });
+
+  it('Should be resource access denied', async () => {
+    const id = faker.number.int({ max: 100 });
+    const userLogged = {
+      id: 1,
+      name: 'test',
+      email: 'test@gmail.com',
+      phoneNumber: '11991742156',
+      role: Role.ADMIN,
+      permissions: ['test'],
+    };
+
+    const tokenGenerated = await jwtService.signAsync(userLogged);
+    token = `Bearer ${tokenGenerated}`;
+    const expectedStatusCode = HttpStatus.FORBIDDEN;
+    const expectedResponse = {
+      message: 'Access to this resource was denied',
+      statusCode: expectedStatusCode,
+    };
+
+    return request(app.getHttpServer())
+      .patch(`${path}/${id}`)
+      .set({ Authorization: token })
       .expect(expectedStatusCode)
       .expect(expectedResponse);
   });

@@ -13,6 +13,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@infra/http/guards/auth.guard';
+import { PermissionGuard } from '@infra/http/guards/permission.guard';
+import { Permission } from '@infra/decorators/permission.decorator';
 import { CreatePermissionSerializerInputDto } from '@infra/http/serializers/permission/create.serializer';
 import { FindPermissionSerializerInputDto } from '@infra/http/serializers/permission/find.serializer';
 import {
@@ -29,6 +31,7 @@ import { FindAllPermissionsUseCase } from '@application/useCases/permission/find
 import { FindPermissionUseCase } from '@application/useCases/permission/find.usecase';
 import { UpdatePermissionUseCase } from '@application/useCases/permission/update.usecase';
 import { DeletePermissionUseCase } from '@application/useCases/permission/delete.usecase';
+import { Permission as PermissionEnum } from '@domain/enums/permission.enum';
 import { Response } from 'express';
 
 @Controller({ path: 'permission', version: '1' })
@@ -47,6 +50,8 @@ export class PermissionController {
   private readonly context = 'PermissionController';
 
   @Post()
+  @Permission(PermissionEnum.CREATE_PERMISSION)
+  @UseGuards(PermissionGuard)
   async create(
     @Body() input: CreatePermissionSerializerInputDto,
     @Res() res: Response,
@@ -76,6 +81,8 @@ export class PermissionController {
   }
 
   @Get()
+  @Permission(PermissionEnum.READ_ALL_PERMISSIONS)
+  @UseGuards(PermissionGuard)
   async findAll(@Res() res: Response) {
     this.loggerService.info(`START ${this.context} findAll`);
     try {
@@ -100,6 +107,8 @@ export class PermissionController {
   }
 
   @Get(':id')
+  @Permission(PermissionEnum.READ_PERMISSION)
+  @UseGuards(PermissionGuard)
   async findOne(
     @Param() input: FindPermissionSerializerInputDto,
     @Res() res: Response,
@@ -131,6 +140,8 @@ export class PermissionController {
   }
 
   @Patch(':id')
+  @Permission(PermissionEnum.UPDATE_PERMISSION)
+  @UseGuards(PermissionGuard)
   async update(
     @Param() params: UpdatePermissionSerializerInputParamDto,
     @Body() input: UpdatePermissionSerializerInputDto,
@@ -166,6 +177,8 @@ export class PermissionController {
   }
 
   @Delete(':id')
+  @Permission(PermissionEnum.DELETE_PERMISSION)
+  @UseGuards(PermissionGuard)
   async remove(
     @Param() input: DeletePermissionSerializerInputDto,
     @Res() res: Response,
