@@ -1,0 +1,27 @@
+version: '3.5'
+
+services:
+  boilerplate-nestjs-serverless:
+    container_name: boilerplate-nestjs-serverless
+    build: .
+    restart: always
+    ports:
+      - '3005:3005'
+    volumes:
+      - .:/app
+      - node-modules-boilerplate-nestjs-serverless-volume:/app/node_modules
+    networks:
+      - boilerplate-nestjs-serverless-network
+      - mysql-network
+    stdin_open: true
+    tty: true
+volumes:
+  node-modules-boilerplate-nestjs-serverless-volume:
+    name: node-modules-boilerplate-nestjs-serverless-volume
+networks:
+  boilerplate-nestjs-serverless-network:
+    name: boilerplate-nestjs-serverless-network
+    driver: bridge
+  mysql-network:
+    name: mysql-network
+    driver: bridge
