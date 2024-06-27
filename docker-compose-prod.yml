@@ -12,8 +12,8 @@ services:
    - "3005:3005"
   networks:
    - boilerplate-nestjs-docker-network
-  # env_file:
-  #   - stack.env
+  env_file:
+    - stack.env
 networks:
   boilerplate-nestjs-docker-network:
    name: boilerplate-nestjs-docker-network
