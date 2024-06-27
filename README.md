@@ -138,6 +138,8 @@ To check and fix linting issues, use the following commands:
 To seed the database with initial data, use the following command:
 ```bash
 npm run seed
+```
+
 
 ## Docs
 
