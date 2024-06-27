@@ -11,15 +11,15 @@ This boilerplate project is built with NestJS and includes Docker support, Prism
 ## Getting Started
 
 ### Prerequisites
-- Node.js (>=14.x)
+- Node.js (>=18.x)
 - Docker and Docker Compose
 - PostgreSQL (or any other Prisma-supported database)
 
 ### Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-repo/your-project.git
-    cd your-project
+    git clone https://github.com/GabrielSoares-Dev/Boilerplate-nestjs-docker.git
+    cd Boilerplate-nestjs-docker
     ```
 
 2. Install the dependencies:
