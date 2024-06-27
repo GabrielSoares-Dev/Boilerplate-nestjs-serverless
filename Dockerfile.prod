@@ -6,7 +6,7 @@ FROM base AS dependencies
 WORKDIR /app
 
 COPY package*.json ./
-RUN
+
 RUN npm ci
 
 COPY --chown=node:node . .
@@ -33,7 +33,8 @@ FROM base As production
 
 COPY --chown=node:node --from=build /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/package*.json ./
-COPY --chown=node:node --from=build /app/dist ./dist
+COPY --chown=node:node --from=build /app/package*.json ./
+COPY --chown=node:node --from=build /app/prisma ./prisma
 
 
 CMD  npm run start:migrate:prod
