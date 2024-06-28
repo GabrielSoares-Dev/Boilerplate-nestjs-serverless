@@ -1,0 +1,7 @@
+ExampleSQS:
+    handler: ${self:custom.functionsDir}/sqs/example.function.handler
+    events:
+      - sqs:
+          arn: !GetAtt ExampleSQS.Arn
+          batchSize: 1
+          maximumConcurrency: 20

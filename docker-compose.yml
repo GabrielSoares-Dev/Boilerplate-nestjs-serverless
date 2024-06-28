@@ -6,7 +6,7 @@ services:
     build: .
     restart: always
     ports:
-      - '3005:3005'
+      - '3000:3000'
     volumes:
       - .:/app
       - node-modules-boilerplate-nestjs-serverless-volume:/app/node_modules

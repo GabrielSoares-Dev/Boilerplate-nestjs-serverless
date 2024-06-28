@@ -18,7 +18,7 @@ export class HealthController {
   constructor(
     @Inject(LOGGER_SERVICE_TOKEN)
     private readonly loggerService: LoggerServiceInterface,
-  ) {}
+  ) { }
 
   private readonly context = 'HealthController';
 

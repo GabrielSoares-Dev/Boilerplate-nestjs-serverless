@@ -19,3 +19,4 @@ import { UserRepository } from '@infra/repositories/user.repository';
   exports: [USER_REPOSITORY_TOKEN],
 })
 export class UserModule {}
+

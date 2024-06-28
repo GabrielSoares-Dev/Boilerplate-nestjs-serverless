@@ -1,0 +1,32 @@
+service: boilerplate-nestjs-10-serverless
+
+provider:
+    name: aws
+    region: us-east-2
+    runtime: nodejs18.x
+    iam:
+     role:
+       statements:
+       - Effect: Allow
+         Action:
+         - ssm:GetParameter
+         Resource: arn:aws:ssm:${aws:region}:${aws:accountId}:parameter/*
+    environment:
+      APP_NAME: ${self:service}-${self:custom.stage}
+      DATABASE_URL: mysql://root:password@mysql:3306/boilerplate-nestjs-serverless
+      JWT_SECRET: 2af3c790dccbc011f6b9f17cf38dafd5a9dbe7e079123bcbc3148c160f7c1fbd
+      TOKEN_EXPIRES_IN: 10h
+custom:
+  functionsDir: src/infra/functions
+  stage: ${sls:stage}
+  exampleSNSTopicName: example-sns-${self:custom.stage}
+  exampleSQSQueueName: example-sqs-${self:custom.stage}
+resources:
+   - "${file(devops/sqs.yml)}"
+functions:
+   - ${file(${self:custom.functionsDir}/api/handler.yml)}
+  #  - ${file(${self:custom.functionsDir}/sqs/_handlers.yml)}
+plugins:
+  # - serverless-webpack
+  - serverless-offline
+

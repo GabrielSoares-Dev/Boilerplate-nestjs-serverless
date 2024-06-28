@@ -1,0 +1,5 @@
+api:
+  handler: src/lambda.handler
+  events:
+    - httpApi: '*'
+  

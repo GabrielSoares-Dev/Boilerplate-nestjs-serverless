@@ -11,6 +11,6 @@ async function bootstrap() {
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
     }),
   );
-  await app.listen(3005);
+  await app.listen(3000);
 }
 bootstrap();
