@@ -21,12 +21,14 @@ custom:
   stage: ${sls:stage}
   exampleSNSTopicName: example-sns-${self:custom.stage}
   exampleSQSQueueName: example-sqs-${self:custom.stage}
+  webpack:
+    excludeDevDependencies: true
 resources:
    - "${file(devops/sqs.yml)}"
 functions:
    - ${file(${self:custom.functionsDir}/api/handler.yml)}
   #  - ${file(${self:custom.functionsDir}/sqs/_handlers.yml)}
 plugins:
-  # - serverless-webpack
+  - serverless-webpack
   - serverless-offline
 
