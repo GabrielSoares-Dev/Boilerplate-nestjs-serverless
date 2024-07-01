@@ -1,79 +1,51 @@
-const path = require('path');
-const webpack = require('webpack');
-const slsw = require('serverless-webpack');
-const ForkTSCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-require('source-map-support').install();
+const path = require('path')
+const serverlessWebpack = require('serverless-webpack');
+const nodeExternals = require('webpack-node-externals');
 const TerserPlugin = require('terser-webpack-plugin');
-
-const lazyImports = [
-  '@nestjs/microservices',
-  '@nestjs/microservices/microservices-module',
-  '@nestjs/websockets/socket-module',
-  '@nestjs/platform-express',
-  '@grpc/grpc-js',
-  '@grpc/proto-loader',
-  'kafkajs',
-  'mqtt',
-  'nats',
-  'ioredis',
-  'amqplib',
-  'amqp-connection-manager',
-  'pg-native',
-  'cache-manager',
-  'class-validator',
-  'class-transformer',
-];
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
-  mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
-  devtool: 'source-map',
-  entry: slsw.lib.entries,
-  target: 'node',
-  resolve: {
-    extensions: ['.cjs', '.mjs', '.js', '.ts'],
-  },
-  output: {
-    libraryTarget: 'commonjs2',
-    path: path.join(__dirname, '.webpack'),
-    filename: '[name].js',
-  },
-  externals: [],
+  devtool: 'inline-cheap-module-source-map',
+  entry: serverlessWebpack.lib.entries,
+  mode: 'production',
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.ts$/,
         loader: 'ts-loader',
+        exclude: [
+          path.resolve(__dirname, 'node_modules'),
+          path.resolve(__dirname, '.webpack'),
+          path.resolve(__dirname, '.serverless'),
+          path.resolve(__dirname, 'test')
+        ],
         options: {
-          configFile: 'tsconfig.webpack.json',
-          transpileOnly: true,
-          experimentalFileCaching: true,
-        },
-        exclude: [path.resolve(__dirname, 'test')],
-      },
+          transpileOnly: true
+        }
+      }
     ],
   },
+  node: false,
+  externals: [nodeExternals()],
   optimization: {
-    minimizer: [
-      new TerserPlugin({
-        terserOptions: {
-          keep_classnames: true,
-        },
-      }),
-    ],
+    minimize: true,
+    minimizer: [new TerserPlugin({
+      terserOptions: {
+        keep_classnames: true,
+        keep_fnames: true,
+      }
+    }
+    )],
+  },
+  resolve: {
+    extensions: ['.mjs', '.ts', '.js','.json'],
+    alias: {
+      '@domain': path.resolve(__dirname, 'src/domain'),
+      '@application': path.resolve(__dirname, 'src/application'),
+      '@infra': path.resolve(__dirname, 'src/infra')
+    }
   },
   plugins: [
-    new ForkTSCheckerWebpackPlugin(),
-    new webpack.IgnorePlugin({
-      checkResource(resource) {
-        if (lazyImports.includes(resource)) {
-          try {
-            require.resolve(resource);
-          } catch (err) {
-            return true;
-          }
-        }
-        return false;
-      },
-    }),
+    new ForkTsCheckerWebpackPlugin()
   ],
+  target: 'node',
 };

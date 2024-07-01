@@ -22,13 +22,21 @@ custom:
   exampleSNSTopicName: example-sns-${self:custom.stage}
   exampleSQSQueueName: example-sqs-${self:custom.stage}
   webpack:
-    excludeDevDependencies: true
+    webpackConfig: webpack.config.js
+    packager: npm
+package:
+  individually: true
+  excludeDevDependencies: true
 resources:
    - "${file(devops/sqs.yml)}"
 functions:
    - ${file(${self:custom.functionsDir}/api/handler.yml)}
-  #  - ${file(${self:custom.functionsDir}/sqs/_handlers.yml)}
+   - ${file(${self:custom.functionsDir}/sqs/_handlers.yml)}
 plugins:
   - serverless-webpack
   - serverless-offline
-
+layers:
+  commonLibs:
+    path: layer
+    compatibleRuntimes:
+      - nodejs18.x

@@ -1,25 +1,25 @@
 import { HttpStatus, HttpException } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { Callback, Context, Handler, SQSEvent } from 'aws-lambda';
+import { Handler, SQSEvent } from 'aws-lambda';
 import { AppModule } from '@infra/modules/app.module';
-import { LOGGER_SERVICE_TOKEN, LoggerServiceInterface } from '@application/services/logger.service';
+import {
+  LOGGER_SERVICE_TOKEN,
+  LoggerServiceInterface,
+} from '@application/services/logger.service';
 import { inputSQSNormalizer } from '@infra/utils/inputFunctionNormalizer.util';
 
-export const handler: Handler = async (
-  event: SQSEvent,
-  context: Context,
-  callback: Callback,
-) => {
+export const handler: Handler = async (event: SQSEvent) => {
   const appContext = await NestFactory.createApplicationContext(AppModule);
-  const loggerService = appContext.get<LoggerServiceInterface>(LOGGER_SERVICE_TOKEN);
+  const loggerService =
+    appContext.get<LoggerServiceInterface>(LOGGER_SERVICE_TOKEN);
   try {
-    const input = inputSQSNormalizer(event)
-    loggerService.info('START example sqs')
-    loggerService.debug('input', input)
+    const input = inputSQSNormalizer(event);
+    loggerService.info('START example sqs');
+    loggerService.debug('input', input);
     return {
       body: {
         statusCode: HttpStatus.OK,
-        message: 'SQS example is working'
+        message: 'SQS example is working',
       },
       statusCode: HttpStatus.OK,
     };
@@ -30,5 +30,4 @@ export const handler: Handler = async (
     loggerService.error('error', errorMessage);
     throw new HttpException(errorMessage, httpCode);
   }
-
 };
