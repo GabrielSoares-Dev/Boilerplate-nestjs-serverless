@@ -29,7 +29,7 @@ export class HealthController {
     try {
       const response = {
         statusCode: HttpStatus.OK,
-        message: 'Server is running',
+        message: 'Server is runnin',
       };
       this.loggerService.info(`FINISH ${this.context} health`);
       return res.json(response);
