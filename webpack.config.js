@@ -3,6 +3,7 @@ const serverlessWebpack = require('serverless-webpack');
 const nodeExternals = require('webpack-node-externals');
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   devtool: 'inline-cheap-module-source-map',
@@ -46,7 +47,12 @@ module.exports = {
     }
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin()
+    new ForkTsCheckerWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [
+        { from: './node_modules/.prisma/client/schema.prisma', to: './' },
+      ],
+    }),
   ],
   target: 'node',
 };

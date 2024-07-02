@@ -25,9 +25,17 @@ custom:
     webpackConfig: webpack.config.js
     packager: npm
     includeModules: true
+    packagerOptions:
+      scripts:
+        - prisma generate
 package:
   individually: true
   excludeDevDependencies: true
+  patterns:
+    - '!node_modules/.prisma/client/libquery_engine-*'
+    - 'node_modules/.prisma/client/libquery_engine-rhel-*'
+    - '!node_modules/prisma/libquery_engine-*'
+    - '!node_modules/@prisma/engines/**'
 resources:
    - "${file(devops/sqs.yml)}"
 functions:

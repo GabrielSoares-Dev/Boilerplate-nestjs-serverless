@@ -20,4 +20,4 @@ jobs:
       - name: Install Node Dependencies
         run: npm ci
       - name: Deploy
-        run: npx serverless deploy
+        run: npm run serverless:deploy
