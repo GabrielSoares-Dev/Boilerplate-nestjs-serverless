@@ -13,7 +13,7 @@ provider:
          Resource: arn:aws:ssm:${aws:region}:${aws:accountId}:parameter/*
     environment:
       APP_NAME: ${self:service}-${self:custom.stage}
-      DATABASE_URL: "mysql://${self:custom.dbUsername}:${self:custom.dbPassword}@${self:custom.dbHost}:${self:custom.dbPort}/boilerplate-nestjs-serverless"
+      DATABASE_URL: "mysql://${self:custom.dbUsername}:${self:custom.dbPassword}@${self:custom.dbHost}:${self:custom.dbPort}/boilerplate-nestjs-serverless?connection_limit=5"
       JWT_SECRET: 2af3c790dccbc011f6b9f17cf38dafd5a9dbe7e079123bcbc3148c160f7c1fbd
       TOKEN_EXPIRES_IN: 10h
 custom:
