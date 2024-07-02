@@ -21,13 +21,12 @@ jobs:
           node-version: "18.x"
       - name: Install Node Dependencies
         run: npm ci
+      - name: Run migration
+        run: npm run migrate:prod
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
+        if: ${{github.event.inputs.run-migration == 'true'}}
       - name: Deploy
         run: npm run serverless:deploy
-      - name: Run migration
-        run: |
-         aws lambda invoke \
-          --function-name boilerplate-nestjs-10-serverless-dev-migrate \
-          --payload '{}' \
-          response.json \
-          --region us-east-2
-        if: ${{github.event.inputs.run-migration == 'true'}}
+      
+     
