@@ -32,6 +32,7 @@ custom:
     packagerOptions:
       scripts:
         - prisma generate
+        - prisma migrate deploy
 package:
   individually: true
   excludeDevDependencies: true
