@@ -8,7 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "node_modules/dist",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
@@ -18,13 +18,27 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@domain": ["./src/domain"],
-      "@application": ["./src/application"],
-      "@infra": ["./src/infra"],
-      "@domain/*": ["./src/domain/*"],
-      "@application/*": ["./src/application/*"],
-      "@infra/*": ["./src/infra/*"],
-      "@test/*": ["./test/*"]
+      "@domain": [
+        "./src/domain"
+      ],
+      "@application": [
+        "./src/application"
+      ],
+      "@infra": [
+        "./src/infra"
+      ],
+      "@domain/*": [
+        "./src/domain/*"
+      ],
+      "@application/*": [
+        "./src/application/*"
+      ],
+      "@infra/*": [
+        "./src/infra/*"
+      ],
+      "@test/*": [
+        "./test/*"
+      ]
     }
   },
   "watchOptions": {

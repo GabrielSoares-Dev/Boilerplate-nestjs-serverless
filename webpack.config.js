@@ -10,18 +10,18 @@ module.exports = {
   mode: 'production',
   module: {
     rules: [{
-        test: /\.ts$/,
-        loader: 'ts-loader',
-        exclude: [
-          path.resolve(__dirname, 'node_modules'),
-          path.resolve(__dirname, '.webpack'),
-          path.resolve(__dirname, '.serverless'),
-          path.resolve(__dirname, 'test')
-        ],
-        options: {
-          transpileOnly: true
-        }
+      test: /\.ts$/,
+      loader: 'ts-loader',
+      exclude: [
+        path.resolve(__dirname, 'node_modules'),
+        path.resolve(__dirname, '.webpack'),
+        path.resolve(__dirname, '.serverless'),
+        path.resolve(__dirname, 'test')
+      ],
+      options: {
+        transpileOnly: true
       }
+    }
     ],
   },
   node: false,
@@ -32,12 +32,13 @@ module.exports = {
       terserOptions: {
         keep_classnames: true,
         keep_fnames: true,
+        
       }
     }
     )],
   },
   resolve: {
-    extensions: ['.mjs', '.ts', '.js','.json'],
+    extensions: ['.mjs', '.ts', '.js', '.json'],
     alias: {
       '@domain': path.resolve(__dirname, 'src/domain'),
       '@application': path.resolve(__dirname, 'src/application'),

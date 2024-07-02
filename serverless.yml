@@ -24,6 +24,7 @@ custom:
   webpack:
     webpackConfig: webpack.config.js
     packager: npm
+    includeModules: true
 package:
   individually: true
   excludeDevDependencies: true
@@ -35,8 +36,3 @@ functions:
 plugins:
   - serverless-webpack
   - serverless-offline
-layers:
-  commonLibs:
-    path: layer
-    compatibleRuntimes:
-      - nodejs18.x
