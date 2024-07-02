@@ -5,6 +5,7 @@ import { APIGatewayEvent, Context } from 'aws-lambda';
 
 let cachedServer;
 export const handler = async (event: APIGatewayEvent, context: Context) => {
+  console.log(process.env.DATABASE_URL);
   if (!cachedServer) {
     const nestApp = await NestFactory.create(AppModule);
     await nestApp.init();
