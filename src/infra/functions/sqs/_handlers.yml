@@ -1,5 +1,5 @@
 ExampleSQS:
-    handler: ${self:custom.functionsDir}/sqs/example.function.handler
+    handler: ${self:custom.functionsDir}/sqs/example.handler
     events:
       - sqs:
           arn: !GetAtt ExampleSQS.Arn
