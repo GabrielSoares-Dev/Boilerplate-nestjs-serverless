@@ -45,6 +45,7 @@ resources:
 functions:
    - ${file(${self:custom.functionsDir}/api/handler.yml)}
    - ${file(${self:custom.functionsDir}/sqs/_handlers.yml)}
+   - ${file(${self:custom.functionsDir}/commands/_handlers.yml)}
 plugins:
   - serverless-webpack
   - serverless-offline
