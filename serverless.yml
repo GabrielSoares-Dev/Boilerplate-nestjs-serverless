@@ -42,9 +42,11 @@ package:
     - '!node_modules/@prisma/engines/**'
 resources:
    - "${file(devops/sqs.yml)}"
+   - "${file(devops/sns.yml)}"
 functions:
    - ${file(${self:custom.functionsDir}/api/handler.yml)}
    - ${file(${self:custom.functionsDir}/sqs/_handlers.yml)}
+   - ${file(${self:custom.functionsDir}/sns/_handlers.yml)}
 plugins:
   - serverless-webpack
   - serverless-offline

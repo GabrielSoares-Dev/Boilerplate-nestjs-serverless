@@ -1,0 +1,6 @@
+ExampleSNS:
+    handler: ${self:custom.functionsDir}/sns/example.handler
+    events:
+      - sns:
+          arn: !Ref ExampleSNS
+          topicName: example-sns-${self:custom.stage}
