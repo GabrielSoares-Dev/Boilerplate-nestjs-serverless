@@ -27,9 +27,10 @@ export class HealthController {
   async health(@Res() res: Response) {
     this.loggerService.info(`START ${this.context} health`);
     try {
+      console.log(process.env.DATABASE_URL);
       const response = {
         statusCode: HttpStatus.OK,
-        message: 'Server is runnin',
+        message: 'Server is running',
       };
       this.loggerService.info(`FINISH ${this.context} health`);
       return res.json(response);
