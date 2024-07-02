@@ -28,6 +28,7 @@ custom:
     packagerOptions:
       scripts:
         - prisma generate
+        -- find . -name "libquery_engine-*" -not -name "libquery_engine-rhel-openssl-*" | xargs rm
 package:
   individually: true
   excludeDevDependencies: true
