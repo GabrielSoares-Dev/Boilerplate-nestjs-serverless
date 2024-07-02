@@ -30,5 +30,6 @@ jobs:
          aws lambda invoke \
           --function-name migrate \
           --payload '{}' \
-          response.json
+          response.json \
+          --region us-east-2
         if: ${{github.event.inputs.run-migration == 'true'}}
