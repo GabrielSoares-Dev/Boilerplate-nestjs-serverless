@@ -1,8 +1,9 @@
 ## Introduction
-This boilerplate project is built with NestJS and includes Docker support, Prisma for database management, and integrated authentication and authorization mechanisms. It is designed to provide a solid foundation for developing scalable and maintainable server-side applications.
+This boilerplate project is built with NestJS and includes Docker support, Prisma for database management, and integrated authentication and authorization mechanisms. It is designed to provide a solid foundation for developing scalable and maintainable server-side applications deployed with the Serverless Framework.
 
 ## Features
 - **NestJS**: A progressive Node.js framework for building efficient, reliable, and scalable server-side applications.
+- **Serverless Framework**: Deployment and management of serverless applications.
 - **Docker**: Containerization for consistent development and production environments.
 - **Prisma**: Modern database toolkit to query, migrate, and model your data.
 - **Authentication**: Built-in JWT authentication.
@@ -18,8 +19,8 @@ This boilerplate project is built with NestJS and includes Docker support, Prism
 ### Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/GabrielSoares-Dev/Boilerplate-nestjs-docker.git
-    cd Boilerplate-nestjs-docker
+    git clone https://github.com/GabrielSoares-Dev/Boilerplate-nestjs-serverless.git
+    cd Boilerplate-nestjs-serverless
     ```
 
 2. Install the dependencies:
@@ -71,14 +72,9 @@ This boilerplate project is built with NestJS and includes Docker support, Prism
     ```
 
 ### Production
-1. Build the project:
+1. Deploy application:
     ```bash
-    npm run build
-    ```
-
-2. Start the application:
-    ```bash
-    npm run start:prod
+    npm run serverless:deploy
     ```
 
 ## Database Migrations
