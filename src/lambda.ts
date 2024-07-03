@@ -10,6 +10,7 @@ export const handler = async (event: APIGatewayEvent, context: Context) => {
   if (!cachedServer) {
     const nestApp = await NestFactory.create(AppModule);
     nestApp.enableVersioning();
+    nestApp.enableShutdownHooks();
     nestApp.useGlobalPipes(
       new ValidationPipe({
         errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
