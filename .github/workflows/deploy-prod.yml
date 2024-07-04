@@ -1,0 +1,20 @@
+name: DEPLOY - PROD
+on:
+   workflow_dispatch:
+    inputs:
+      run_migration:
+        type: boolean
+        default: false
+        description: Run migration into database
+jobs:
+  serverless:
+    name: deploy
+    uses: GabrielSoares-Dev/workflows/.github/workflows/nestjs-serverless-deploy.yml@master
+    with:
+      node_version: '18.x'
+      run_migration: ${{github.event.inputs.run_migration}}
+    secrets:
+      aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID_PROD}}
+      aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY_PROD}}
+      database_url: ${{ secrets.DATABASE_URL_PROD }}
+     
